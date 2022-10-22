@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Sorteador de Bingo</string>
+    <string name="title_cartela">Gerador de Cartela</string>
+    <string name="appbar_cartela">Gerador de Cartela de Bingo</string>
+    <string name="title_sorteador">Sorteador</string>
+    <string name="appbar_sorteador">Sorteador de Bingo</string>
+    <string name="title_notifications">Notifications</string>
+
+<!--    TELA DO GERADOR DE CARTELAS     -->
+    <string name="sortear_cartela">Sortear Cartela</string>
+</resources>
