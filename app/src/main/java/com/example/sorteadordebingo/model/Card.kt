@@ -6,6 +6,6 @@ import kotlinx.serialization.Serializable
 class Card(
     id: String,
     name: String,
-    img: String
+    image: String
 ) {
 }

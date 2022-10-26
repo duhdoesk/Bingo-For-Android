@@ -1,0 +1,288 @@
+[
+  {
+    "id" : "1",
+    "name" : "Bichos",
+    "cards" : [
+      {
+        "id" : "1",
+        "name" : "Formiga",
+        "image" : "https://duhdoesk.github.io/bingo-bichinhos/img/ant"
+      },
+      {
+        "id" : "2",
+        "name" : "Morcego",
+        "image" : "https://duhdoesk.github.io/bingo-bichinhos/img/bat"
+      },
+      {
+        "id" : "3",
+        "name" : "Abelha",
+        "image" : "https://duhdoesk.github.io/bingo-bichinhos/img/bee"
+      },
+      {
+        "id" : "4",
+        "name" : "Besouro",
+        "image" : "https://duhdoesk.github.io/bingo-bichinhos/img/beetle"
+      },
+      {
+        "id" : "5",
+        "name" : "Passarinho",
+        "image" : "https://duhdoesk.github.io/bingo-bichinhos/img/bullfinch"
+      },
+      {
+        "id" : "6",
+        "name" : "Borboleta",
+        "image" : "https://duhdoesk.github.io/bingo-bichinhos/img/butterfly"
+      },
+      {
+        "id" : "7",
+        "name" : "Gato",
+        "image" : "https://duhdoesk.github.io/bingo-bichinhos/img/cat"
+      },
+      {
+        "id" : "8",
+        "name" : "Camaleão",
+        "image" : "https://duhdoesk.github.io/bingo-bichinhos/img/chameleon"
+      },
+      {
+        "id" : "9",
+        "name" : "Peixe-palhaço",
+        "image" : "https://duhdoesk.github.io/bingo-bichinhos/img/clown-fish"
+      },
+      {
+        "id" : "10",
+        "name" : "Vaquinha",
+        "image" : "https://duhdoesk.github.io/bingo-bichinhos/img/cow"
+      },
+      {
+        "id" : "11",
+        "name" : "Carangueijo",
+        "image" : "https://duhdoesk.github.io/bingo-bichinhos/img/crab"
+      },
+      {
+        "id" : "12",
+        "name" : "Crocodilo",
+        "image" : "https://duhdoesk.github.io/bingo-bichinhos/img/crocodile"
+      },
+      {
+        "id" : "13",
+        "name" : "Cervo",
+        "image" : "https://duhdoesk.github.io/bingo-bichinhos/img/deer"
+      },
+      {
+        "id" : "14",
+        "name" : "Dinossauro",
+        "image" : "https://duhdoesk.github.io/bingo-bichinhos/img/dinosaur"
+      },
+      {
+        "id" : "15",
+        "name" : "Cachorro",
+        "image" : "https://duhdoesk.github.io/bingo-bichinhos/img/dog"
+      },
+      {
+        "id" : "16",
+        "name" : "Golfinho",
+        "image" : "https://duhdoesk.github.io/bingo-bichinhos/img/dolphin"
+      },
+      {
+        "id" : "17",
+        "name" : "Pato",
+        "image" : "https://duhdoesk.github.io/bingo-bichinhos/img/ducky"
+      },
+      {
+        "id" : "18",
+        "name" : "Gafanhoto",
+        "image" : "https://duhdoesk.github.io/bingo-bichinhos/img/earwig"
+      },
+      {
+        "id" : "19",
+        "name" : "Elefante",
+        "image" : "https://duhdoesk.github.io/bingo-bichinhos/img/elephant"
+      },
+      {
+        "id" : "20",
+        "name" : "Vagalume",
+        "image" : "https://duhdoesk.github.io/bingo-bichinhos/img/firefly"
+      },
+      {
+        "id" : "21",
+        "name" : "Flamingo",
+        "image" : "https://duhdoesk.github.io/bingo-bichinhos/img/flamingo"
+      },
+      {
+        "id" : "22",
+        "name" : "Raposa",
+        "image" : "https://duhdoesk.github.io/bingo-bichinhos/img/fox"
+      },
+      {
+        "id" : "23",
+        "name" : "Sapo",
+        "image" : "https://duhdoesk.github.io/bingo-bichinhos/img/frog"
+      },
+      {
+        "id" : "24",
+        "name" : "Girafa",
+        "image" : "https://duhdoesk.github.io/bingo-bichinhos/img/giraffe"
+      },
+      {
+        "id" : "25",
+        "name" : "Galinha",
+        "image" : "https://duhdoesk.github.io/bingo-bichinhos/img/hen"
+      },
+      {
+        "id" : "26",
+        "name" : "Hipopótamo",
+        "image" : "https://duhdoesk.github.io/bingo-bichinhos/img/hippo"
+      },
+      {
+        "id" : "27",
+        "name" : "Cavalo",
+        "image" : "https://duhdoesk.github.io/bingo-bichinhos/img/horse"
+      },
+      {
+        "id" : "28",
+        "name" : "Água-viva",
+        "image" : "https://duhdoesk.github.io/bingo-bichinhos/img/jellyfish"
+      },
+      {
+        "id" : "29",
+        "name" : "Coala",
+        "image" : "https://duhdoesk.github.io/bingo-bichinhos/img/koala"
+      },
+      {
+        "id" : "30",
+        "name" : "Joaninha",
+        "image" : "https://duhdoesk.github.io/bingo-bichinhos/img/ladybug"
+      },
+      {
+        "id" : "31",
+        "name" : "Leão",
+        "image" : "https://duhdoesk.github.io/bingo-bichinhos/img/lion"
+      },
+      {
+        "id" : "32",
+        "name" : "Lagarto",
+        "image" : "https://duhdoesk.github.io/bingo-bichinhos/img/lizard"
+      },
+      {
+        "id" : "33",
+        "name" : "Lagosta",
+        "image" : "https://duhdoesk.github.io/bingo-bichinhos/img/lobster"
+      },
+      {
+        "id" : "34",
+        "name" : "Macaco",
+        "image" : "https://duhdoesk.github.io/bingo-bichinhos/img/monkey"
+      },
+      {
+        "id" : "35",
+        "name" : "Rato",
+        "image" : "https://duhdoesk.github.io/bingo-bichinhos/img/mouse"
+      },
+      {
+        "id" : "36",
+        "name" : "Polvo",
+        "image" : "https://duhdoesk.github.io/bingo-bichinhos/img/octopus"
+      },
+      {
+        "id" : "37",
+        "name" : "Coruja",
+        "image" : "https://duhdoesk.github.io/bingo-bichinhos/img/owl"
+      },
+      {
+        "id" : "38",
+        "name" : "Panda",
+        "image" : "https://duhdoesk.github.io/bingo-bichinhos/img/panda"
+      },
+      {
+        "id" : "39",
+        "name" : "Pinguim",
+        "image" : "https://duhdoesk.github.io/bingo-bichinhos/img/penguin"
+      },
+      {
+        "id" : "40",
+        "name" : "Porquinho",
+        "image" : "https://duhdoesk.github.io/bingo-bichinhos/img/pig"
+      },
+      {
+        "id" : "41",
+        "name" : "Coelho",
+        "image" : "https://duhdoesk.github.io/bingo-bichinhos/img/bunny"
+      },
+      {
+        "id" : "42",
+        "name" : "Cavalo Marinho",
+        "image" : "https://duhdoesk.github.io/bingo-bichinhos/img/seahorse"
+      },
+      {
+        "id" : "43",
+        "name" : "Tubarão",
+        "image" : "https://duhdoesk.github.io/bingo-bichinhos/img/shark"
+      },
+      {
+        "id" : "44",
+        "name" : "Ovelha",
+        "image" : "https://duhdoesk.github.io/bingo-bichinhos/img/sheep"
+      },
+      {
+        "id" : "45",
+        "name" : "Preguiça",
+        "image" : "https://duhdoesk.github.io/bingo-bichinhos/img/sloth"
+      },
+      {
+        "id" : "46",
+        "name" : "Caramujo",
+        "image" : "https://duhdoesk.github.io/bingo-bichinhos/img/snail"
+      },
+      {
+        "id" : "47",
+        "name" : "Cobra",
+        "image" : "https://duhdoesk.github.io/bingo-bichinhos/img/snake"
+      },
+      {
+        "id" : "48",
+        "name" : "Esquilo",
+        "image" : "https://duhdoesk.github.io/bingo-bichinhos/img/squirrel"
+      },
+      {
+        "id" : "49",
+        "name" : "Estrela do Mar",
+        "image" : "https://duhdoesk.github.io/bingo-bichinhos/img/starfish"
+      },
+      {
+        "id" : "50",
+        "name" : "Tigresa",
+        "image" : "https://duhdoesk.github.io/bingo-bichinhos/img/tiger"
+      },
+      {
+        "id" : "51",
+        "name" : "Tucano",
+        "image" : "https://duhdoesk.github.io/bingo-bichinhos/img/toucan"
+      },
+      {
+        "id" : "52",
+        "name" : "Tartaruga",
+        "image" : "https://duhdoesk.github.io/bingo-bichinhos/img/turtle"
+      },
+      {
+        "id" : "53",
+        "name" : "Baleia",
+        "image" : "https://duhdoesk.github.io/bingo-bichinhos/img/whale"
+      },
+      {
+        "id" : "54",
+        "name" : "Lobo",
+        "image" : "https://duhdoesk.github.io/bingo-bichinhos/img/wolf"
+      },
+      {
+        "id" : "55",
+        "name" : "Capivara",
+        "image" : "https://duhdoesk.github.io/bingo-bichinhos/img/capivara"
+      },
+      {
+        "id" : "56",
+        "name" : "Canguru",
+        "image" : "https://duhdoesk.github.io/bingo-bichinhos/img/kangaroo"
+      }
+    ]
+  }
+]
