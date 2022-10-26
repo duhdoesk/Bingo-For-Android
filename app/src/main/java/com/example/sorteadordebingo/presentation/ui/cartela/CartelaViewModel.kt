@@ -1,4 +1,4 @@
-package com.example.sorteadordebingo.ui.cartela
+package com.example.sorteadordebingo.presentation.ui.cartela
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

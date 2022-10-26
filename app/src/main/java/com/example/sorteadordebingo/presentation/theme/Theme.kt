@@ -1,4 +1,4 @@
-package com.example.sorteadordebingo.ui.theme
+package com.example.sorteadordebingo.presentation.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme

@@ -1,4 +1,4 @@
-package com.example.sorteadordebingo.ui.sorteador
+package com.example.sorteadordebingo.presentation.ui.sorteador
 
 import android.os.Bundle
 import android.view.LayoutInflater
