@@ -5,22 +5,41 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
 
-private val LightColorPalette = lightColors(
-    primary = FlowersPrimaryDark,
-    primaryVariant = FlowersPrimary,
-    onPrimary = Color.White,
-    onSurface = Color.White,
-    surface = FlowersPrimary
+
+private val LightColors = lightColors(
+    primary = green_800,
+    onPrimary = white,
+    secondary = green_900,
+    onSecondary = white,
+    error = light_error,
+    onError = white,
+    primaryVariant = complementary,
+    secondaryVariant = complementary
+)
+
+
+private val DarkColors = darkColors(
+    primary = green_400,
+    onPrimary = black,
+    secondary = green_300,
+    onSecondary = black,
+    error = dark_error,
+    onError = black,
+    primaryVariant = complementary,
+    secondaryVariant = complementary
 )
 
 @Composable
-fun ProjectTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    content: @Composable () -> Unit
+fun AppTheme(
+  useDarkTheme: Boolean = isSystemInDarkTheme(),
+  content: @Composable() () -> Unit
 ) {
-    val colors = if (darkTheme) darkColors() else LightColorPalette
+  val colors = if (!useDarkTheme) {
+    LightColors
+  } else {
+    DarkColors
+  }
 
     MaterialTheme(
         colors = colors,

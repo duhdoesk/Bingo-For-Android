@@ -1,11 +1,15 @@
 package com.example.sorteadordebingo.ui.cartela
 
+import android.content.res.Configuration
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.ActionBar
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -36,7 +40,7 @@ class CartelaFragment : Fragment() {
 
         return ComposeView(requireContext()).apply {
             setContent {
-                ProjectTheme {
+                AppTheme() {
                     Surface {
                         SetCartelaFragment()
                     }
@@ -45,17 +49,17 @@ class CartelaFragment : Fragment() {
         }
     }
 
-    @Preview
+    @Preview(name =  "Light Mode")
+    @Preview(
+        uiMode = Configuration.UI_MODE_NIGHT_YES,
+        showBackground = true,
+        name = "Dark mode"
+    )
     @Composable
     private fun SetCartelaFragment() {
 
         Column(
-            modifier = Modifier.fillMaxSize().background(
-                Brush.verticalGradient(
-                    if (isSystemInDarkTheme()) 0.0f to Color.Transparent else 0.0f to gradientLighter,
-                    1.0f to Color.Transparent
-                )
-            ),
+            modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -98,7 +102,7 @@ class CartelaFragment : Fragment() {
                 trailingIcon = {
                     ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
                 },
-                colors = ExposedDropdownMenuDefaults.textFieldColors(backgroundColor = gridBackground)
+                colors = ExposedDropdownMenuDefaults.textFieldColors(backgroundColor = grid_background)
             )
 
             ExposedDropdownMenu(
@@ -138,7 +142,7 @@ class CartelaFragment : Fragment() {
                                 .padding(1.dp)
                                 .width(100.dp)
                                 .height(124.dp)
-                                .background(gridBackground),
+                                .background(grid_background),
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.Center
                         ) {
