@@ -4,6 +4,10 @@ plugins {
 
 //    Compose
     id 'kotlin-android'
+
+//    Hilt
+    id 'kotlin-kapt'
+    id 'com.google.dagger.hilt.android'
 }
 
 android {
@@ -72,4 +76,12 @@ dependencies {
 //    Serialization
     implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1'
 
+//    Hilt
+    implementation "com.google.dagger:hilt-android:2.44"
+    kapt "com.google.dagger:hilt-compiler:2.44"
+
+}
+
+kapt {
+    correctErrorTypes true
 }
