@@ -1,8 +1,10 @@
 package com.example.sorteadordebingo.presentation.ui.card
 
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.sorteadordebingo.data.ThemeLocalDataSource
 import com.example.sorteadordebingo.model.Element
@@ -15,7 +17,8 @@ import kotlin.random.Random
 class CardViewModel @Inject constructor(private val themeLocalDataSource: ThemeLocalDataSource) : ViewModel() {
 
     val elementList: MutableState<List<Element>?> = mutableStateOf(emptyList())
-    val themeId by mutableStateOf("1")
+    val themeList: MutableState<List<Theme>> = mutableStateOf(themeList())
+    var themeId: String = "1"
 
     init {
         dealNewList()
@@ -41,6 +44,9 @@ class CardViewModel @Inject constructor(private val themeLocalDataSource: ThemeL
             .toList()
     }
 
+    private fun themeList() : List<Theme> {
+        return themeLocalDataSource.loadThemes()
+    }
 
     private fun getTheme(id: String) : Theme? {
         val theme = themeLocalDataSource.loadThemes().find {

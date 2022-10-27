@@ -284,5 +284,241 @@
         "image" : "https://duhdoesk.github.io/bingo-bichinhos/img/kangaroo.png"
       }
     ]
+  },
+  {
+    "id" : "2",
+    "name" : "Frutas",
+    "elements" : [
+      {
+        "id" : "1",
+        "name" : "Abacaxi",
+        "image" : "https://cdn-icons-png.flaticon.com/512/6866/6866518.png"
+      },
+      {
+        "id" : "2",
+        "name" : "Abacate",
+        "image" : "https://cdn-icons-png.flaticon.com/512/2079/2079249.png"
+      },
+      {
+        "id" : "3",
+        "name" : "Amora",
+        "image" : "https://cdn-icons-png.flaticon.com/512/1791/1791358.png"
+      },
+      {
+        "id" : "4",
+        "name" : "Banana",
+        "image" : "https://cdn-icons-png.flaticon.com/512/2909/2909808.png"
+      },
+      {
+        "id" : "5",
+        "name" : "Caju",
+        "image" : "https://cdn-icons-png.flaticon.com/512/5501/5501125.png"
+      },
+      {
+        "id" : "6",
+        "name" : "Carambola",
+        "image" : "https://cdn-icons-png.flaticon.com/512/3137/3137132.png"
+      },
+      {
+        "id" : "7",
+        "name" : "Cacau",
+        "image" : "https://cdn-icons-png.flaticon.com/512/5080/5080856.png"
+      },
+      {
+        "id" : "8",
+        "name" : "Avelã",
+        "image" : "https://cdn-icons-png.flaticon.com/512/2079/2079309.png"
+      },
+      {
+        "id" : "9",
+        "name" : "Figo",
+        "image" : "https://cdn-icons-png.flaticon.com/512/4055/4055142.png"
+      },
+      {
+        "id" : "10",
+        "name" : "Framboesa",
+        "image" : "https://cdn-icons-png.flaticon.com/512/1791/1791310.png"
+      },
+      {
+        "id" : "11",
+        "name" : "Goiaba",
+        "image" : "https://cdn-icons-png.flaticon.com/512/5402/5402118.png"
+      },
+      {
+        "id" : "12",
+        "name" : "Graviola",
+        "image" : "https://cdn-icons-png.flaticon.com/512/5854/5854055.png"
+      },
+      {
+        "id" : "13",
+        "name" : "Jabuticaba",
+        "image" : "https://cdn-icons-png.flaticon.com/512/6136/6136104.png"
+      },
+      {
+        "id" : "14",
+        "name" : "Kiwi",
+        "image" : "https://cdn-icons-png.flaticon.com/512/415/415756.png"
+      },
+      {
+        "id" : "15",
+        "name" : "Laranja",
+        "image" : "https://cdn-icons-png.flaticon.com/512/1791/1791312.png"
+      },
+      {
+        "id" : "16",
+        "name" : "Limão",
+        "image" : "https://cdn-icons-png.flaticon.com/512/6866/6866584.png"
+      },
+      {
+        "id" : "17",
+        "name" : "Lichia",
+        "image" : "https://cdn-icons-png.flaticon.com/512/2548/2548555.png"
+      },
+      {
+        "id" : "18",
+        "name" : "Mamão",
+        "image" : "https://cdn-icons-png.flaticon.com/512/6866/6866557.png"
+      },
+      {
+        "id" : "19",
+        "name" : "Melancia",
+        "image" : "https://cdn-icons-png.flaticon.com/512/1791/1791301.png"
+      },
+      {
+        "id" : "20",
+        "name" : "Marmelo",
+        "image" : "https://cdn-icons-png.flaticon.com/512/3944/3944226.png"
+      },
+      {
+        "id" : "21",
+        "name" : "Nectarina",
+        "image" : "https://cdn-icons-png.flaticon.com/512/1791/1791317.png"
+      },
+      {
+        "id" : "22",
+        "name" : "Nêspera",
+        "image" : "https://cdn-icons-png.flaticon.com/512/4891/4891255.png"
+      },
+      {
+        "id" : "23",
+        "name" : "Pera",
+        "image" : "https://cdn-icons-png.flaticon.com/512/3944/3944178.png"
+      },
+      {
+        "id" : "24",
+        "name" : "Pêssego",
+        "image" : "https://cdn-icons-png.flaticon.com/512/6866/6866552.png"
+      },
+      {
+        "id" : "25",
+        "name" : "Romã",
+        "image" : "https://cdn-icons-png.flaticon.com/512/4031/4031074.png"
+      },
+      {
+        "id" : "26",
+        "name" : "Tâmara",
+        "image" : "https://cdn-icons-png.flaticon.com/512/3944/3944223.png"
+      },
+      {
+        "id" : "27",
+        "name" : "Tangerina",
+        "image" : "https://cdn-icons-png.flaticon.com/512/6458/6458109.png"
+      },
+      {
+        "id" : "28",
+        "name" : "Uva",
+        "image" : "https://cdn-icons-png.flaticon.com/512/3620/3620931.png"
+      },
+      {
+        "id" : "29",
+        "name" : "Açaí",
+        "image" : "https://cdn-icons-png.flaticon.com/512/5917/5917321.png"
+      },
+      {
+        "id" : "30",
+        "name" : "Acerola",
+        "image" : "https://cdn-icons-png.flaticon.com/512/3137/3137057.png"
+      },
+      {
+        "id" : "31",
+        "name" : "Caqui",
+        "image" : "https://cdn-icons-png.flaticon.com/512/5402/5402252.png"
+      },
+      {
+        "id" : "32",
+        "name" : "Fruta do Conde",
+        "image" : "https://cdn-icons-png.flaticon.com/512/8645/8645393.png"
+      },
+      {
+        "id" : "33",
+        "name" : "Cereja",
+        "image" : "https://cdn-icons-png.flaticon.com/512/2460/2460503.png"
+      },
+      {
+        "id" : "34",
+        "name" : "Coco",
+        "image" : "https://cdn-icons-png.flaticon.com/512/3167/3167391.png"
+      },
+      {
+        "id" : "35",
+        "name" : "Pistache",
+        "image" : "https://cdn-icons-png.flaticon.com/512/5501/5501281.png"
+      },
+      {
+        "id" : "36",
+        "name" : "Groselha",
+        "image" : "https://cdn-icons-png.flaticon.com/512/6106/6106859.png"
+      },
+      {
+        "id" : "37",
+        "name" : "Jaca",
+        "image" : "https://cdn-icons-png.flaticon.com/512/6135/6135896.png"
+      },
+      {
+        "id" : "38",
+        "name" : "Maçã",
+        "image" : "https://cdn-icons-png.flaticon.com/512/415/415733.png"
+      },
+      {
+        "id" : "39",
+        "name" : "Manga",
+        "image" : "https://cdn-icons-png.flaticon.com/512/1135/1135559.png"
+      },
+      {
+        "id" : "40",
+        "name" : "Maracujá",
+        "image" : "https://cdn-icons-png.flaticon.com/512/1791/1791364.png"
+      },
+      {
+        "id" : "41",
+        "name" : "Melão",
+        "image" : "https://cdn-icons-png.flaticon.com/512/1515/1515045.png"
+      },
+      {
+        "id" : "42",
+        "name" : "Morango",
+        "image" : "https://cdn-icons-png.flaticon.com/512/590/590772.png"
+      },
+      {
+        "id" : "43",
+        "name" : "Pitanga",
+        "image" : "https://cdn-icons-png.flaticon.com/512/6498/6498613.png"
+      },
+      {
+        "id" : "44",
+        "name" : "Pitaya",
+        "image" : "https://cdn-icons-png.flaticon.com/512/7875/7875204.png"
+      },
+      {
+        "id" : "45",
+        "name" : "Guaraná",
+        "image" : "https://cdn-icons-png.flaticon.com/512/5854/5854040.png"
+      },
+      {
+        "id" : "46",
+        "name" : "Uva Verde",
+        "image" : "https://cdn-icons-png.flaticon.com/512/3347/3347414.png"
+      }
+    ]
   }
 ]

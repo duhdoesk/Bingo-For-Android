@@ -43,14 +43,9 @@ class CardFragment : Fragment() {
     ): View {
 
         return ComposeView(requireContext()).apply {
-
-            lifecycleScope.launch {
-                viewModel.elementList.let {
-                    setContent {
-                        AppTheme {
-                            Surface { SetCardFragment(it.value!!.toList())}
-                        }
-                    }
+            setContent {
+                AppTheme {
+                    Surface { viewModel.elementList.value?.let { SetCardFragment(it) } }
                 }
             }
         }
@@ -89,9 +84,10 @@ class CardFragment : Fragment() {
     @Composable
     private fun DropdownMenu() {
 
-        val options = listOf("Bichos", "Flores", "Frutas")
+//        val options = listOf("Bichos", "Flores", "Frutas")
+        val options = viewModel.themeList.value
         var expanded by remember { mutableStateOf(false) }
-        var selectedOptionText by remember { mutableStateOf(options[0]) }
+        var selectedOptionText by remember { mutableStateOf(options[0].name) }
 
         ExposedDropdownMenuBox(
             expanded = expanded,
@@ -115,10 +111,12 @@ class CardFragment : Fragment() {
                 options.forEach { selectionOption ->
                     DropdownMenuItem(
                         onClick = {
-                            selectedOptionText = selectionOption
+                            selectedOptionText = selectionOption.name
                             expanded = false
+                            viewModel.themeId = selectionOption.id
+                            viewModel.dealNewList()
                         }
-                    ) { Text(text = selectionOption) }
+                    ) { Text(text = selectionOption.name) }
                 }
             }
         }
@@ -160,7 +158,7 @@ class CardFragment : Fragment() {
                                     Image(
                                         bitmap = img.asImageBitmap(),
                                         contentDescription = "Element image",
-                                        Modifier.size(80.dp)
+                                        Modifier.size(70.dp)
                                     )
                                 }
                             }
@@ -168,7 +166,9 @@ class CardFragment : Fragment() {
 //                            Nome do Elemento
                             Text(
                                 text = elements[row][column].name,
-                                textAlign = TextAlign.Center
+                                textAlign = TextAlign.Center,
+                                style = MaterialTheme.typography.caption,
+                                modifier = Modifier.padding(top = 8.dp)
                             )
                         }
                     }
