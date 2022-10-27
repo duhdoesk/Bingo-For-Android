@@ -1,4 +1,4 @@
-package com.example.sorteadordebingo.presentation.ui.sorteador
+package com.example.sorteadordebingo.presentation.ui.drawer
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 
-class SorteadorFragment : Fragment() {
+class DrawerFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater,

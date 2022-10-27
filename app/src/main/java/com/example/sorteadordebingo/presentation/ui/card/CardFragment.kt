@@ -1,7 +1,7 @@
-package com.example.sorteadordebingo.presentation.ui.cartela
+package com.example.sorteadordebingo.presentation.ui.card
 
-import android.content.res.Configuration
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,17 +14,27 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.example.sorteadordebingo.R
+import com.example.sorteadordebingo.model.Element
 import com.example.sorteadordebingo.presentation.theme.*
+import com.example.sorteadordebingo.util.DEFAULT_IMAGE
+import com.example.sorteadordebingo.util.loadPicture
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
 
-class CartelaFragment : Fragment() {
+@AndroidEntryPoint
+class CardFragment : Fragment() {
+
+    private val viewModel: CardViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,24 +43,23 @@ class CartelaFragment : Fragment() {
     ): View {
 
         return ComposeView(requireContext()).apply {
-            setContent {
-                AppTheme() {
-                    Surface {
-                        SetCartelaFragment()
+
+            lifecycleScope.launch {
+                viewModel.elementList.let {
+                    setContent {
+                        AppTheme {
+                            Surface { SetCardFragment(it.value!!.toList())}
+                        }
                     }
                 }
             }
         }
     }
 
-    @Preview(name =  "Light Mode")
-    @Preview(
-        uiMode = Configuration.UI_MODE_NIGHT_YES,
-        showBackground = true,
-        name = "Dark mode"
-    )
     @Composable
-    private fun SetCartelaFragment() {
+    private fun SetCardFragment(elementList: List<Element>) {
+
+        Log.d("SetCardFragment() ", "called")
 
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -62,11 +71,11 @@ class CartelaFragment : Fragment() {
             DropdownMenu()
 
 //            Chamada da função responsável pela criação do grid
-            GridMaker()
+            GridMaker(elementList)
 
 //            Botão responsável pelo sorteio da cartela
             Button(
-                onClick = { /*TODO*/ },
+                onClick = { viewModel.dealNewList() },
                 elevation = ButtonDefaults.elevation(4.dp)
             ) {
                 Text(text = stringResource(id = R.string.sortear_cartela).uppercase())
@@ -116,13 +125,16 @@ class CartelaFragment : Fragment() {
     }
 
 //    Função responsável pela criação do grid
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Composable
-    private fun GridMaker() {
-        val bichos = listOf(
-            listOf("Cachorro", "Gato", "Lesma"),
-            listOf("Pavão", "Raposa", "Tartaruga Voadora"),
-            listOf("Capivara", "Leão", "Castor")
+    private fun GridMaker(elementList: List<Element>) {
+        val elements = listOf(
+            listOf(elementList[0], elementList[1], elementList[2]),
+            listOf(elementList[3], elementList[4], elementList[5]),
+            listOf(elementList[6], elementList[7], elementList[8]),
         )
+
+        Log.d("GridMaker() ", "called")
 
         Column(
             Modifier
@@ -141,16 +153,21 @@ class CartelaFragment : Fragment() {
                             verticalArrangement = Arrangement.Center
                         ) {
 
-//                            Imagem do Bicho
-                            Image(
-                                painter = painterResource(id = R.drawable.ic_baseline_emoji_nature_24),
-                                contentDescription = "Animal image",
-                                Modifier.size(80.dp)
-                            )
+//                            Imagem do elemento
+                            elements[row][column].image.let { url ->
+                                val image = loadPicture(url = url, defaultImage = DEFAULT_IMAGE).value
+                                image?.let { img ->
+                                    Image(
+                                        bitmap = img.asImageBitmap(),
+                                        contentDescription = "Element image",
+                                        Modifier.size(80.dp)
+                                    )
+                                }
+                            }
 
-//                            Nome do Bicho
+//                            Nome do Elemento
                             Text(
-                                text = bichos[row][column],
+                                text = elements[row][column].name,
                                 textAlign = TextAlign.Center
                             )
                         }

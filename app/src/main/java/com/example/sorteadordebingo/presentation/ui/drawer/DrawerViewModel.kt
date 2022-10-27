@@ -1,10 +1,10 @@
-package com.example.sorteadordebingo.presentation.ui.sorteador
+package com.example.sorteadordebingo.presentation.ui.drawer
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class SorteadorViewModel : ViewModel() {
+class DrawerViewModel : ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
         value = "This is dashboard Fragment"
