@@ -1,4 +1,4 @@
-package com.example.sorteadordebingo.presentation.ui.card
+package com.example.sorteadordebingo.presentation.ui.fragments
 
 import android.os.Bundle
 import android.util.Log
@@ -21,20 +21,19 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sorteadordebingo.R
-import com.example.sorteadordebingo.model.Element
 import com.example.sorteadordebingo.presentation.theme.*
+import com.example.sorteadordebingo.presentation.ui.model.BingoViewModel
 import com.example.sorteadordebingo.util.DEFAULT_IMAGE
 import com.example.sorteadordebingo.util.loadPicture
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class CardFragment : Fragment() {
 
-    private val viewModel: CardViewModel by viewModels()
+    private val viewModel: BingoViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,17 +44,14 @@ class CardFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setContent {
                 AppTheme {
-                    Surface { viewModel.elementList.value?.let { SetCardFragment(it) } }
+                    Surface { SetCardFragment() }
                 }
             }
         }
     }
 
     @Composable
-    private fun SetCardFragment(elementList: List<Element>) {
-
-        Log.d("SetCardFragment() ", "called")
-
+    private fun SetCardFragment() {
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
@@ -66,7 +62,7 @@ class CardFragment : Fragment() {
             DropdownMenu()
 
 //            Chamada da função responsável pela criação do grid
-            GridMaker(elementList)
+            CardMaker()
 
 //            Botão responsável pelo sorteio da cartela
             Button(
@@ -79,15 +75,15 @@ class CardFragment : Fragment() {
         }
     }
 
-//    Função responsável pela criação do menu suspenso
+    //    Função responsável pela criação do menu suspenso
     @OptIn(ExperimentalMaterialApi::class)
     @Composable
     private fun DropdownMenu() {
 
-//        val options = listOf("Bichos", "Flores", "Frutas")
+        Log.d("Called Function: ", "DropdownMenu()")
+
         val options = viewModel.themeList.value
         var expanded by remember { mutableStateOf(false) }
-        var selectedOptionText by remember { mutableStateOf(options[0].name) }
 
         ExposedDropdownMenuBox(
             expanded = expanded,
@@ -95,7 +91,7 @@ class CardFragment : Fragment() {
         ) {
             TextField(
                 readOnly = true,
-                value = selectedOptionText,
+                value = viewModel.currentTheme.value.name,
                 onValueChange = { },
                 label = { Text(text = "Tema do Bingo") },
                 trailingIcon = {
@@ -111,9 +107,8 @@ class CardFragment : Fragment() {
                 options.forEach { selectionOption ->
                     DropdownMenuItem(
                         onClick = {
-                            selectedOptionText = selectionOption.name
                             expanded = false
-                            viewModel.themeId = selectionOption.id
+                            viewModel.currentTheme.value = selectionOption
                             viewModel.dealNewList()
                         }
                     ) { Text(text = selectionOption.name) }
@@ -125,14 +120,12 @@ class CardFragment : Fragment() {
 //    Função responsável pela criação do grid
     @OptIn(ExperimentalCoroutinesApi::class)
     @Composable
-    private fun GridMaker(elementList: List<Element>) {
+    private fun CardMaker() {
         val elements = listOf(
-            listOf(elementList[0], elementList[1], elementList[2]),
-            listOf(elementList[3], elementList[4], elementList[5]),
-            listOf(elementList[6], elementList[7], elementList[8]),
+            listOf(viewModel.elementList.value[0], viewModel.elementList.value[1], viewModel.elementList.value[2]),
+            listOf(viewModel.elementList.value[3], viewModel.elementList.value[4], viewModel.elementList.value[5]),
+            listOf(viewModel.elementList.value[6], viewModel.elementList.value[7], viewModel.elementList.value[8]),
         )
-
-        Log.d("GridMaker() ", "called")
 
         Column(
             Modifier

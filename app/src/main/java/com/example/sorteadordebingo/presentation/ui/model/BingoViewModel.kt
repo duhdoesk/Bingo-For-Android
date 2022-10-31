@@ -1,10 +1,6 @@
-package com.example.sorteadordebingo.presentation.ui.card
+package com.example.sorteadordebingo.presentation.ui.model
 
-import android.util.Log
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import com.example.sorteadordebingo.data.ThemeLocalDataSource
 import com.example.sorteadordebingo.model.Element
@@ -14,23 +10,18 @@ import javax.inject.Inject
 import kotlin.random.Random
 
 @HiltViewModel
-class CardViewModel @Inject constructor(private val themeLocalDataSource: ThemeLocalDataSource) : ViewModel() {
+class BingoViewModel @Inject constructor(private val themeLocalDataSource: ThemeLocalDataSource) : ViewModel() {
 
-    val elementList: MutableState<List<Element>?> = mutableStateOf(emptyList())
-    val themeList: MutableState<List<Theme>> = mutableStateOf(themeList())
-    var themeId: String = "1"
-
-    init {
-        dealNewList()
-    }
+    val themeList = mutableStateOf(themeList())
+    var currentTheme = mutableStateOf(themeList.value[0])
+    val elementList = mutableStateOf(currentTheme.value.elements)
 
     fun dealNewList() {
-        val theme = getTheme(themeId)!!
-        val drawIndexes = drawIndexes(theme.elements.size)
+        val drawIndexes = drawIndexes(currentTheme.value.elements.size)
         val newList = mutableListOf<Element>()
 
         for (element in drawIndexes) {
-            newList.add(theme.elements[element])
+            newList.add(currentTheme.value.elements[element])
         }
 
         elementList.value = newList
@@ -55,4 +46,5 @@ class CardViewModel @Inject constructor(private val themeLocalDataSource: ThemeL
 
         return theme
     }
+
 }

@@ -7,13 +7,13 @@
 
     <fragment
         android:id="@+id/navigation_cartela"
-        android:name="com.example.sorteadordebingo.presentation.ui.card.CardFragment"
+        android:name="com.example.sorteadordebingo.presentation.ui.fragments.CardFragment"
         android:label="@string/appbar_cartela"
         tools:layout="@layout/fragment_cartela" />
 
     <fragment
         android:id="@+id/navigation_sorteador"
-        android:name="com.example.sorteadordebingo.presentation.ui.drawer.DrawerFragment"
+        android:name="com.example.sorteadordebingo.presentation.ui.fragments.DrawerFragment"
         android:label="@string/appbar_sorteador"
         tools:layout="@layout/fragment_sorteador" />
 
