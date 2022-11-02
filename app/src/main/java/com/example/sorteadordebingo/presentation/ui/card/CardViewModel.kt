@@ -1,4 +1,4 @@
-package com.example.sorteadordebingo.presentation.ui.model
+package com.example.sorteadordebingo.presentation.ui.card
 
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
@@ -37,14 +37,6 @@ class BingoViewModel @Inject constructor(private val themeLocalDataSource: Theme
 
     private fun themeList() : List<Theme> {
         return themeLocalDataSource.loadThemes()
-    }
-
-    private fun getTheme(id: String) : Theme? {
-        val theme = themeLocalDataSource.loadThemes().find {
-            it.id == id
-        } ?: return null
-
-        return theme
     }
 
 }

@@ -1,7 +1,6 @@
-package com.example.sorteadordebingo.presentation.ui.fragments
+package com.example.sorteadordebingo.presentation.ui.card
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,10 +20,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sorteadordebingo.R
 import com.example.sorteadordebingo.presentation.theme.*
-import com.example.sorteadordebingo.presentation.ui.model.BingoViewModel
 import com.example.sorteadordebingo.util.DEFAULT_IMAGE
 import com.example.sorteadordebingo.util.loadPicture
 import dagger.hilt.android.AndroidEntryPoint
@@ -54,22 +51,28 @@ class CardFragment : Fragment() {
     private fun SetCardFragment() {
         Column(
             modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
+            verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
 //            Chamada da função responsável pela criação do menu suspenso
             DropdownMenu()
 
-//            Chamada da função responsável pela criação do grid
-            CardMaker()
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                //            Chamada da função responsável pela criação do grid
+                CardMaker()
 
 //            Botão responsável pelo sorteio da cartela
-            Button(
-                onClick = { viewModel.dealNewList() },
-                elevation = ButtonDefaults.elevation(4.dp)
-            ) {
-                Text(text = stringResource(id = R.string.sortear_cartela).uppercase())
+                Button(
+                    onClick = { viewModel.dealNewList() },
+                    elevation = ButtonDefaults.elevation(4.dp)
+                ) {
+                    Text(text = stringResource(id = R.string.sortear_cartela).uppercase())
+                }
             }
 
         }
@@ -79,8 +82,6 @@ class CardFragment : Fragment() {
     @OptIn(ExperimentalMaterialApi::class)
     @Composable
     private fun DropdownMenu() {
-
-        Log.d("Called Function: ", "DropdownMenu()")
 
         val options = viewModel.themeList.value
         var expanded by remember { mutableStateOf(false) }
@@ -97,7 +98,8 @@ class CardFragment : Fragment() {
                 trailingIcon = {
                     ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
                 },
-                colors = ExposedDropdownMenuDefaults.textFieldColors(backgroundColor = grid_background)
+                colors = ExposedDropdownMenuDefaults.textFieldColors(backgroundColor = grid_background),
+                modifier = Modifier.fillMaxWidth()
             )
 
             ExposedDropdownMenu(
