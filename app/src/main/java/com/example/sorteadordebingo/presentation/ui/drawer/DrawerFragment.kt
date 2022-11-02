@@ -2,7 +2,6 @@
 
 package com.example.sorteadordebingo.presentation.ui.drawer
 
-import android.app.Activity
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -238,6 +237,15 @@ class DrawerFragment : Fragment() {
 
     @Composable
     private fun StateNextElement(drawingState: DrawingState.NextElement) {
+        Text(
+            text = "${viewModel.drawnList.size} / ${viewModel.currentTheme.value.elements.size}",
+            textAlign = TextAlign.Center,
+            style = MaterialTheme.typography.h6,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colors.primary,
+            modifier = Modifier.fillMaxWidth()
+        )
+
         drawingState.nextElement.let {
             it.image.let { url ->
                 val image = loadPicture(url = url, defaultImage = DEFAULT_IMAGE).value
@@ -248,6 +256,7 @@ class DrawerFragment : Fragment() {
                         Modifier
                             .fillMaxWidth()
                             .height(240.dp)
+                            .padding(top = 8.dp)
                     )
                 }
             }

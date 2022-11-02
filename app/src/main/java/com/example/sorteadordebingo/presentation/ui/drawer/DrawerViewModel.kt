@@ -1,11 +1,6 @@
 package com.example.sorteadordebingo.presentation.ui.drawer
 
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
 import androidx.compose.runtime.*
-import androidx.core.content.ContentProviderCompat.requireContext
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.ViewModel
 import com.example.sorteadordebingo.data.ThemeLocalDataSource
 import com.example.sorteadordebingo.model.Element
