@@ -2,6 +2,10 @@
 
 package com.example.sorteadordebingo.presentation.ui.drawer
 
+import android.app.Activity
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -24,10 +28,12 @@ import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.example.sorteadordebingo.model.Element
 import com.example.sorteadordebingo.presentation.theme.AppTheme
 import com.example.sorteadordebingo.presentation.theme.grid_background
 import com.example.sorteadordebingo.util.DEFAULT_IMAGE
 import com.example.sorteadordebingo.util.loadPicture
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
@@ -184,7 +190,7 @@ class DrawerFragment : Fragment() {
                         modifier = Modifier
                             .wrapContentSize()
                             .padding(4.dp),
-                        onClick = { }
+                        onClick = { copyToClipboard(elements) }
                     ) {
                         Text(
                             text = element.name.uppercase(),
@@ -279,7 +285,7 @@ class DrawerFragment : Fragment() {
                     onClick = { viewModel.drawNewElement() },
                     modifier = Modifier.padding(8.dp)
                 ) {
-                    Text(text = "SORTEAR PRÓXIMO")
+                    Text(text = "PRÓXIMO")
                 }
             }
         }
@@ -314,6 +320,26 @@ class DrawerFragment : Fragment() {
                 text = "NOVO SORTEIO",
                 color = MaterialTheme.colors.onPrimary
             )
+        }
+    }
+
+    private fun copyToClipboard(elements: List<Element>) {
+        var string = "*ELEMENTOS SORTEADOS:* \n\n"
+
+        for (element in elements) {
+            string += element.name.plus("\n")
+        }
+
+        val clipboardManager = activity?.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clipData = ClipData.newPlainText("Elementos Sorteados", string)
+        clipboardManager.setPrimaryClip(clipData)
+
+        view?.let {
+            Snackbar.make(
+                it,
+                "Lista Copiada",
+                Snackbar.LENGTH_SHORT
+            ).show()
         }
     }
 }
