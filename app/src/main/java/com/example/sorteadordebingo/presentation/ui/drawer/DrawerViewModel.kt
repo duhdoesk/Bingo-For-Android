@@ -13,14 +13,14 @@ import kotlin.random.Random
 
 sealed class DrawingState {
     object NotStarted : DrawingState()
-    data class Finished(val nextElement: Element) : DrawingState()
+    object Finished : DrawingState()
     data class NextElement(val nextElement: Element) : DrawingState()
 }
 
 @HiltViewModel
 class DrawerViewModel @Inject constructor(private val themeLocalDataSource: ThemeLocalDataSource) : ViewModel() {
 
-//    Define lista de temas disponíveis, bem como o tema selecionado
+//    Armazena lista de temas disponíveis, bem como o tema selecionado
     val themeList = themeList()
     var currentTheme = mutableStateOf(themeList[0])
 
@@ -28,7 +28,7 @@ class DrawerViewModel @Inject constructor(private val themeLocalDataSource: Them
     private var drawingState = MutableStateFlow<DrawingState>(DrawingState.NotStarted)
     val state = drawingState.asStateFlow()
 
-//    Armazena o estados das listas de elementos sorteados e não sorteados
+//    Armazena as listas de elementos sorteados e não sorteados
     private var elementList = currentTheme.value.elements.toMutableList()
     private var notDrawn = mutableListOf<Element>()
     var drawnList = mutableListOf<Element>()
@@ -43,7 +43,7 @@ class DrawerViewModel @Inject constructor(private val themeLocalDataSource: Them
         notDrawn.removeAt(index)
 
         if (notDrawn.isEmpty()) {
-            drawingState.value = DrawingState.Finished(drawnList[0])
+            drawingState.value = DrawingState.Finished
         } else {
             drawingState.value = DrawingState.NextElement(drawnList[0])
         }

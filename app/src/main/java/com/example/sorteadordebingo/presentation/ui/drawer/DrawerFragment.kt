@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMaterialApi::class, ExperimentalCoroutinesApi::class)
+
 package com.example.sorteadordebingo.presentation.ui.drawer
 
 import android.os.Bundle
@@ -15,13 +17,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.example.sorteadordebingo.model.Element
 import com.example.sorteadordebingo.presentation.theme.AppTheme
 import com.example.sorteadordebingo.presentation.theme.grid_background
 import com.example.sorteadordebingo.util.DEFAULT_IMAGE
@@ -89,7 +91,6 @@ class DrawerFragment : Fragment() {
     }
 
 //    Função responsável pela criação do menu suspenso
-    @OptIn(ExperimentalMaterialApi::class)
     @Composable
     private fun DropdownMenu(drawingState: DrawingState) {
 
@@ -132,7 +133,6 @@ class DrawerFragment : Fragment() {
     }
 
 //    Função responsável pela criação do sorteador, a depender do estado do sorteio
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Composable
     private fun Drawer(drawingState: DrawingState) {
 
@@ -143,101 +143,18 @@ class DrawerFragment : Fragment() {
                 .padding(horizontal = 8.dp)
         ) {
             when (drawingState) {
-                is DrawingState.NotStarted -> {
-                    Row(
-                        horizontalArrangement = Arrangement.Center,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 16.dp)
-                    ) {
-                        Button(
-                            onClick = { viewModel.drawNewElement() },
-                            modifier = Modifier.padding(8.dp)
-                        ) {
-                            Text(text = "COMEÇAR")
-                        }
-                    }
-                }
-                is DrawingState.NextElement -> {
-                    drawingState.nextElement.let {
-                        it.image.let { url ->
-                            val image = loadPicture(url = url, defaultImage = DEFAULT_IMAGE).value
-                            image?.let { img ->
-                                Image(
-                                    bitmap = img.asImageBitmap(),
-                                    contentDescription = "Element image",
-                                    Modifier
-                                        .fillMaxWidth()
-                                        .height(240.dp)
-                                )
-                            }
-                        }
-
-                        Text(
-                            text = it.name.uppercase(),
-                            textAlign = TextAlign.Center,
-                            style = MaterialTheme.typography.h6,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(top = 16.dp)
-                        )
-
-                        Row(
-                            horizontalArrangement = Arrangement.SpaceEvenly,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(top = 16.dp)
-                        ) {
-                            Button(
-                                onClick = { viewModel.restartDrawing() },
-                                modifier = Modifier.padding(8.dp),
-                                colors = ButtonDefaults.buttonColors(
-                                    backgroundColor = Color.Gray
-                                )
-                            ) {
-                                Text(
-                                    text = "Recomeçar",
-                                    color = MaterialTheme.colors.onPrimary
-                                )
-                            }
-
-                            Button(
-                                onClick = { viewModel.drawNewElement() },
-                                modifier = Modifier.padding(8.dp)
-                            ) {
-                                Text(text = "SORTEAR PRÓXIMO")
-                            }
-                        }
-                    }
-                }
-                else -> {
-
-                }
+                is DrawingState.NotStarted -> { StateNotStarted() }
+                is DrawingState.NextElement -> { StateNextElement(drawingState) }
+                else -> { StateFinished() }
             }
         }
     }
 
 //    Função responsável pela criação da lazyrow que informa os elementos já sorteados
-    @OptIn(ExperimentalMaterialApi::class)
     @Composable
     private fun ElementsDrawnLazyRow() {
-        val elements: List<Element> = listOf(
-            Element(
-                "1",
-                "Carangueijo",
-                "https://cdn-icons-png.flaticon.com/512/6498/6498613.png"
-            ),
-            Element("1", "Jiboia", "https://cdn-icons-png.flaticon.com/512/6498/6498613.png"),
-            Element("1", "Libélula", "https://cdn-icons-png.flaticon.com/512/6498/6498613.png"),
-            Element("1", "Jacaré", "https://cdn-icons-png.flaticon.com/512/6498/6498613.png"),
-            Element(
-                "1",
-                "Orangotangos",
-                "https://cdn-icons-png.flaticon.com/512/6498/6498613.png"
-            ),
-            Element("2", "Baleia", "https://cdn-icons-png.flaticon.com/512/6498/6498613.png")
-        )
+        val elements = viewModel.drawnList
+
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -261,7 +178,9 @@ class DrawerFragment : Fragment() {
                     Card(
                         shape = MaterialTheme.shapes.medium,
                         elevation = 8.dp,
-                        backgroundColor = MaterialTheme.colors.primaryVariant,
+                        backgroundColor =
+                            if (element == elements[0]) MaterialTheme.colors.primaryVariant
+                            else Color.Gray,
                         modifier = Modifier
                             .wrapContentSize()
                             .padding(4.dp),
@@ -276,6 +195,125 @@ class DrawerFragment : Fragment() {
                     }
                 }
             }
+        }
+    }
+
+    @Composable
+    private fun StateNotStarted() {
+        Text(
+            text = "NADA POR AQUI...",
+            textAlign = TextAlign.Center,
+            style = MaterialTheme.typography.h4,
+            fontStyle = FontStyle.Italic,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colors.primaryVariant,
+            modifier = Modifier
+                .fillMaxWidth()
+        )
+
+        Text(
+            text = "Inicie um novo sorteio clicando no botão abaixo",
+            textAlign = TextAlign.Center,
+            style = MaterialTheme.typography.subtitle1,
+            modifier = Modifier
+                .fillMaxWidth()
+        )
+
+        Button(
+            onClick = { viewModel.drawNewElement() },
+            modifier = Modifier.padding(top = 40.dp),
+        ) {
+            Text(
+                text = "NOVO SORTEIO",
+                color = MaterialTheme.colors.onPrimary
+            )
+        }
+    }
+
+    @Composable
+    private fun StateNextElement(drawingState: DrawingState.NextElement) {
+        drawingState.nextElement.let {
+            it.image.let { url ->
+                val image = loadPicture(url = url, defaultImage = DEFAULT_IMAGE).value
+                image?.let { img ->
+                    Image(
+                        bitmap = img.asImageBitmap(),
+                        contentDescription = "Element image",
+                        Modifier
+                            .fillMaxWidth()
+                            .height(240.dp)
+                    )
+                }
+            }
+
+            Text(
+                text = it.name.uppercase(),
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.h6,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp)
+            )
+
+            Row(
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp)
+            ) {
+                Button(
+                    onClick = { viewModel.restartDrawing() },
+                    modifier = Modifier.padding(8.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor = Color.Gray
+                    )
+                ) {
+                    Text(
+                        text = "RECOMEÇAR",
+                        color = MaterialTheme.colors.onPrimary
+                    )
+                }
+
+                Button(
+                    onClick = { viewModel.drawNewElement() },
+                    modifier = Modifier.padding(8.dp)
+                ) {
+                    Text(text = "SORTEAR PRÓXIMO")
+                }
+            }
+        }
+    }
+
+    @Composable
+    private fun StateFinished() {
+        Text(
+            text = "BINGO ENCERRADO!",
+            textAlign = TextAlign.Center,
+            style = MaterialTheme.typography.h4,
+            fontStyle = FontStyle.Italic,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colors.primaryVariant,
+            modifier = Modifier
+                .fillMaxWidth()
+        )
+
+        Text(
+            text = "Você já sorteou todas as pedras.",
+            textAlign = TextAlign.Center,
+            style = MaterialTheme.typography.subtitle1,
+            modifier = Modifier
+                .fillMaxWidth()
+        )
+
+        Button(
+            onClick = { viewModel.restartDrawing() },
+            modifier = Modifier.padding(top = 40.dp),
+        ) {
+            Text(
+                text = "NOVO SORTEIO",
+                color = MaterialTheme.colors.onPrimary
+            )
         }
     }
 }
