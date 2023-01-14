@@ -271,15 +271,23 @@ class DrawerFragment : Fragment() {
                     .padding(top = 16.dp)
             )
 
-            Row(
-                horizontalArrangement = Arrangement.SpaceEvenly,
+            Column(
+                verticalArrangement = Arrangement.SpaceEvenly,
+                horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 16.dp)
             ) {
                 Button(
+                    onClick = { viewModel.drawNewElement() },
+                    modifier = Modifier.width(200.dp)
+                ) {
+                    Text(text = "PRÓXIMO")
+                }
+
+                Button(
                     onClick = { viewModel.restartDrawing() },
-                    modifier = Modifier.padding(8.dp),
+                    modifier = Modifier.width(200.dp),
                     colors = ButtonDefaults.buttonColors(
                         backgroundColor = Color.Gray
                     )
@@ -288,13 +296,6 @@ class DrawerFragment : Fragment() {
                         text = "RECOMEÇAR",
                         color = MaterialTheme.colors.onPrimary
                     )
-                }
-
-                Button(
-                    onClick = { viewModel.drawNewElement() },
-                    modifier = Modifier.padding(8.dp)
-                ) {
-                    Text(text = "PRÓXIMO")
                 }
             }
         }
@@ -333,7 +334,7 @@ class DrawerFragment : Fragment() {
     }
 
     private fun copyToClipboard(elements: List<Element>) {
-        var string = "*ELEMENTOS SORTEADOS:* \n\n"
+        var string = "*${viewModel.currentTheme.value.name.uppercase()} SORTEADOS(as):* \n\n"
 
         for (element in elements) {
             string += element.name.plus("\n")

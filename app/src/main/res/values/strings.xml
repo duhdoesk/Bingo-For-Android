@@ -7,5 +7,6 @@
     <string name="title_notifications">Notifications</string>
 
 <!--    TELA DO GERADOR DE CARTELAS     -->
-    <string name="sortear_cartela">Sortear Cartela</string>
+    <string name="nova_cartela">Nova Cartela</string>
+    <string name="compartilhar_cartela">Compartilhar</string>
 </resources>

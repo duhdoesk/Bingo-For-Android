@@ -13,6 +13,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.stringResource
@@ -27,6 +28,7 @@ import com.example.sorteadordebingo.util.loadPicture
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
+@OptIn(ExperimentalMaterialApi::class)
 @AndroidEntryPoint
 class CardFragment : Fragment() {
 
@@ -69,9 +71,22 @@ class CardFragment : Fragment() {
 //            Botão responsável pelo sorteio da cartela
                 Button(
                     onClick = { viewModel.dealNewList() },
-                    elevation = ButtonDefaults.elevation(4.dp)
+                    elevation = ButtonDefaults.elevation(4.dp),
+                    modifier = Modifier.width(200.dp)
                 ) {
-                    Text(text = stringResource(id = R.string.sortear_cartela).uppercase())
+                    Text(text = stringResource(id = R.string.nova_cartela).uppercase())
+                }
+
+                Button(
+                    onClick = { /* TODO */ },
+                    elevation = ButtonDefaults.elevation(4.dp),
+                    colors = ButtonDefaults.buttonColors( backgroundColor = Color.Gray ),
+                    modifier = Modifier.width(200.dp)
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.compartilhar_cartela).uppercase(),
+                        color = MaterialTheme.colors.onPrimary
+                    )
                 }
             }
 
@@ -79,7 +94,6 @@ class CardFragment : Fragment() {
     }
 
     //    Função responsável pela criação do menu suspenso
-    @OptIn(ExperimentalMaterialApi::class)
     @Composable
     private fun DropdownMenu() {
 
@@ -120,7 +134,6 @@ class CardFragment : Fragment() {
     }
 
 //    Função responsável pela criação do grid
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Composable
     private fun CardMaker() {
         val elements = listOf(
@@ -171,4 +184,5 @@ class CardFragment : Fragment() {
             }
         }
     }
+
 }
