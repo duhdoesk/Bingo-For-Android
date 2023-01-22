@@ -1,11 +1,13 @@
 package com.example.sorteadordebingo.presentation.ui.card
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -18,15 +20,18 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.sorteadordebingo.R
 import com.example.sorteadordebingo.presentation.theme.*
-import com.example.sorteadordebingo.util.DEFAULT_IMAGE
-import com.example.sorteadordebingo.util.loadPicture
+import com.example.sorteadordebingo.util.*
 import dagger.hilt.android.AndroidEntryPoint
+import dev.shreyaspatil.capturable.Capturable
+import dev.shreyaspatil.capturable.controller.rememberCaptureController
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+
 
 @OptIn(ExperimentalMaterialApi::class)
 @AndroidEntryPoint
@@ -49,26 +54,53 @@ class CardFragment : Fragment() {
         }
     }
 
+    @Preview
     @Composable
     private fun SetCardFragment() {
+        val captureController = rememberCaptureController()
+
         Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colors.background),
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-//            Chamada da função responsável pela criação do menu suspenso
-            DropdownMenu()
+            Capturable(
+                controller = captureController,
+                modifier = Modifier.fillMaxHeight(0.75f),
+                onCaptured = { bitmap, error ->
+                    if (bitmap != null) {
+                        context?.let {
+                            shareBitmap(
+                                bitmap,
+                                it,
+                                R.string.nova_cartela.toString()
+                            )
+                        }
+                    }
+
+                    if (error != null) {
+                        Log.d("CapturingError: ", "$error")
+                    }
+                }
+            ) {
+                Column(
+                    verticalArrangement = Arrangement.SpaceBetween,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.background(MaterialTheme.colors.background)
+                ) {
+                    DropdownMenu()
+                    CardMaker()
+                }
+            }
 
             Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+                modifier = Modifier
+                    .fillMaxHeight(),
+                verticalArrangement = Arrangement.Center
             ) {
-                //            Chamada da função responsável pela criação do grid
-                CardMaker()
-
-//            Botão responsável pelo sorteio da cartela
                 Button(
                     onClick = { viewModel.dealNewList() },
                     elevation = ButtonDefaults.elevation(4.dp),
@@ -78,9 +110,9 @@ class CardFragment : Fragment() {
                 }
 
                 Button(
-                    onClick = { /* TODO */ },
+                    onClick = { captureController.capture() },
                     elevation = ButtonDefaults.elevation(4.dp),
-                    colors = ButtonDefaults.buttonColors( backgroundColor = Color.Gray ),
+                    colors = ButtonDefaults.buttonColors(backgroundColor = Color.Gray),
                     modifier = Modifier.width(200.dp)
                 ) {
                     Text(
@@ -89,7 +121,6 @@ class CardFragment : Fragment() {
                     )
                 }
             }
-
         }
     }
 
@@ -133,19 +164,34 @@ class CardFragment : Fragment() {
         }
     }
 
-//    Função responsável pela criação do grid
+    //    Função responsável pela criação do grid
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Composable
     private fun CardMaker() {
         val elements = listOf(
-            listOf(viewModel.elementList.value[0], viewModel.elementList.value[1], viewModel.elementList.value[2]),
-            listOf(viewModel.elementList.value[3], viewModel.elementList.value[4], viewModel.elementList.value[5]),
-            listOf(viewModel.elementList.value[6], viewModel.elementList.value[7], viewModel.elementList.value[8]),
+            listOf(
+                viewModel.elementList.value[0],
+                viewModel.elementList.value[1],
+                viewModel.elementList.value[2]
+            ),
+            listOf(
+                viewModel.elementList.value[3],
+                viewModel.elementList.value[4],
+                viewModel.elementList.value[5]
+            ),
+            listOf(
+                viewModel.elementList.value[6],
+                viewModel.elementList.value[7],
+                viewModel.elementList.value[8]
+            ),
         )
 
         Column(
             Modifier
                 .padding(vertical = 16.dp)
-                .clip(RoundedCornerShape(12.dp))) {
+                .clip(RoundedCornerShape(12.dp))
+                .background(MaterialTheme.colors.background)
+        ) {
             repeat(3) { row ->
                 Row {
                     repeat(3) { column ->
@@ -161,7 +207,8 @@ class CardFragment : Fragment() {
 
 //                            Imagem do elemento
                             elements[row][column].image.let { url ->
-                                val image = loadPicture(url = url, defaultImage = DEFAULT_IMAGE).value
+                                val image =
+                                    loadPicture(url = url, defaultImage = DEFAULT_IMAGE).value
                                 image?.let { img ->
                                     Image(
                                         bitmap = img.asImageBitmap(),
