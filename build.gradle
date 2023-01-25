@@ -1,6 +1,9 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
+    ext {
+        kotlin_version = '1.7.20'
+    }
     repositories {
         google()
         mavenCentral()
@@ -8,10 +11,11 @@ buildscript {
 
     dependencies {
 //        Serialization
-        classpath "org.jetbrains.kotlin:kotlin-serialization:1.7.20"
+        classpath "org.jetbrains.kotlin:kotlin-serialization:1.8.0"
 
 //        Hilt
         classpath "com.google.dagger:hilt-android-gradle-plugin:2.44"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
 
