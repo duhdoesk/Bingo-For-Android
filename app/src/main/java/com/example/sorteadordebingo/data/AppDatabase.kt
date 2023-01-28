@@ -10,8 +10,8 @@ import androidx.room.RoomDatabase
         Theme::class,
         Element::class
     ],
-    version = 1,
-    exportSchema = true
+    exportSchema = true,
+    version = 1
 )
 abstract class AppDatabase : RoomDatabase() {
 
@@ -30,7 +30,9 @@ abstract class AppDatabase : RoomDatabase() {
                     context.applicationContext,
                     AppDatabase::class.java,
                     "appDatabase"
-                ).build()
+                )
+                    .createFromAsset("data.db")
+                    .build()
                 INSTANCE = instance
                 instance
             }

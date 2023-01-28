@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -76,7 +75,7 @@ class CardFragment : Fragment() {
                             shareBitmap(
                                 bitmap,
                                 it,
-                                R.string.nova_cartela.toString()
+                                R.string.new_card.toString()
                             )
                         }
                     }
@@ -106,7 +105,7 @@ class CardFragment : Fragment() {
                     elevation = ButtonDefaults.elevation(4.dp),
                     modifier = Modifier.width(200.dp)
                 ) {
-                    Text(text = stringResource(id = R.string.nova_cartela).uppercase())
+                    Text(text = stringResource(id = R.string.new_card).uppercase())
                 }
 
                 Button(
@@ -116,7 +115,7 @@ class CardFragment : Fragment() {
                     modifier = Modifier.width(200.dp)
                 ) {
                     Text(
-                        text = stringResource(id = R.string.compartilhar_cartela).uppercase(),
+                        text = stringResource(id = R.string.share_card).uppercase(),
                         color = MaterialTheme.colors.onPrimary
                     )
                 }

@@ -6,17 +6,17 @@ import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
 @Entity(
-    tableName = "element",
+    tableName = "Element",
     foreignKeys = [ForeignKey(
         entity = Theme::class,
-        childColumns = ["theme"],
-        parentColumns = ["id"]
+        childColumns = ["element_theme"],
+        parentColumns = ["theme_id"]
     )]
 )
 data class Element (
-    @PrimaryKey(autoGenerate = true) val id: Long = 0,
-    @ColumnInfo(name = "name") val name: String,
-    @ColumnInfo(name = "picture") val picture: String,
-    @ColumnInfo(name = "draw") val draw: Boolean = false,
-    @ColumnInfo(name = "theme") val theme: Long
+    @PrimaryKey(autoGenerate = false) val element_id: Long,
+    @ColumnInfo val element_name: String = "",
+    @ColumnInfo val element_picture: String = "",
+    @ColumnInfo val element_draw: Int = 0,
+    @ColumnInfo val element_theme: Long = 0
 )

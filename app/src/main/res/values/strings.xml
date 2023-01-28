@@ -1,12 +1,14 @@
 <resources>
     <string name="app_name">Sorteador de Bingo</string>
-    <string name="title_cartela">Gerador de Cartela</string>
-    <string name="appbar_cartela">Gerador de Cartela de Bingo</string>
-    <string name="title_sorteador">Sorteador</string>
-    <string name="appbar_sorteador">Sorteador de Bingo</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="card_title">Gerador de Cartela</string>
+    <string name="card_appbar">Gerador de Cartela de Bingo</string>
+    <string name="draw_title">Sorteador</string>
+    <string name="draw_appbar">Sorteador de Bingo</string>
 
 <!--    TELA DO GERADOR DE CARTELAS     -->
-    <string name="nova_cartela">Nova Cartela</string>
-    <string name="compartilhar_cartela">Compartilhar</string>
+    <string name="new_card">Nova Cartela</string>
+    <string name="share_card">Compartilhar</string>
+
+<!--    TELA DO SORTEADOR   -->
+    <string name="pick_theme">Escolha um tema para o bingo:</string>
 </resources>

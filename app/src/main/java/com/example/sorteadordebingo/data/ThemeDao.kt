@@ -11,9 +11,9 @@ interface ThemeDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(theme: Theme)
 
-    @Query("DELETE FROM theme")
+    @Query("DELETE FROM Theme")
     fun delete()
 
-    @Query("SELECT * FROM theme")
-    fun getThemes() : Flow<List<Theme>>
+    @Query("SELECT * FROM Theme")
+    fun getThemes() : List<Theme>
 }

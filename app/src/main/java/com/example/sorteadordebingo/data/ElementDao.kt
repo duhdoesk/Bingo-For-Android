@@ -11,12 +11,12 @@ interface ElementDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(element: Element)
 
-    @Query("UPDATE element SET draw = :draw WHERE id = :id")
+    @Query("UPDATE Element SET element_draw = :draw WHERE element_id = :id")
     fun update(id: Long, draw: Boolean)
 
-    @Query("DELETE FROM element")
+    @Query("DELETE FROM Element")
     fun delete()
 
-    @Query("SELECT * FROM element")
-    fun getElements() : Flow<List<Element>>
+    @Query("SELECT * FROM Element")
+    fun getElements() : List<Element>
 }

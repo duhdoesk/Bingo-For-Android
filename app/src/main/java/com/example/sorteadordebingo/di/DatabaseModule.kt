@@ -24,7 +24,7 @@ class DatabaseModule {
             AppDatabase::class.java,
             "appDatabase"
         )
-            .createFromAsset("bingo.db")
+            .createFromAsset("data.db")
             .build()
 
     @Singleton

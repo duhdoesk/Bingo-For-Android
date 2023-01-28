@@ -8,13 +8,13 @@
     <fragment
         android:id="@+id/navigation_cartela"
         android:name="com.example.sorteadordebingo.presentation.ui.card.CardFragment"
-        android:label="@string/appbar_cartela"
+        android:label="@string/card_appbar"
         tools:layout="@layout/fragment_cartela" />
 
     <fragment
         android:id="@+id/navigation_sorteador"
         android:name="com.example.sorteadordebingo.presentation.ui.drawer.DrawerFragment"
-        android:label="@string/appbar_sorteador"
+        android:label="@string/draw_appbar"
         tools:layout="@layout/fragment_sorteador" />
 
 </navigation>
