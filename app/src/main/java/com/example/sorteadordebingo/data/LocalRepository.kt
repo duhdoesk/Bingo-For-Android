@@ -15,26 +15,29 @@ class LocalRepository @Inject constructor(
     private val themeDao: ThemeDao
     ) {
 
-    val themes = MutableLiveData<List<Theme>>()
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
-    fun updateElement(id: Long, draw: Boolean) =
-        elementDao.update(id, draw)
+    fun updateElement(id: Long, draw: Int) {
+        coroutineScope.launch(Dispatchers.IO) {
+            elementDao.update(id, draw)
+        }
+    }
 
     fun resetDraw(id: List<Long>) {
         for (i in id) {
-            elementDao.update(i, false)
+            elementDao.update(i, 0)
         }
     }
 
-    fun getElements(): List<Element> =
-        elementDao.getElements()
+    fun getThemes() = themeDao.getThemes()
 
-    fun getThemes() {
-        coroutineScope.launch(Dispatchers.IO) {
-            themes.postValue(themeDao.getThemes())
-        }
-    }
+    fun getElements() = elementDao.getElements()
+
+    fun getAvailableElements(themeId : Long) = elementDao.getAvailableElements(themeId)
+
+    fun getDrawnElements(themeId : Long) = elementDao.getDrawnElements(themeId)
+
+
 
     companion object {
 
