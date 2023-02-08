@@ -25,6 +25,10 @@ class DrawerViewModel @Inject constructor(
     private val localRepository: LocalRepository
 ) : ViewModel() {
 
+    init {
+        checkSavedState()
+    }
+
 //    STATE
     private var drawState = MutableStateFlow<DrawState>(DrawState.NotStarted)
     val state = drawState.asStateFlow()
@@ -89,6 +93,28 @@ class DrawerViewModel @Inject constructor(
                 drawnElements = response
                     .filter { it.element_theme == currentTheme.theme_id && it.element_draw > 0 }
                     .sortedBy { it.element_draw } as MutableList<Element>
+            }
+        }
+    }
+
+    private fun checkSavedState() {
+        val allElements = mutableListOf<Element>()
+
+        viewModelScope.launch(Dispatchers.IO) {
+            elements.collect() { response ->
+                for (e in response) {
+                    if (e.element_draw > 0) {
+                        allElements.add(e)
+                    }
+                }
+                if (allElements.isNotEmpty()) {
+                    themes.collect() { resp ->
+                        currentTheme = resp.find { it.theme_id == allElements[0].element_theme }!!
+                    }
+                    setAvailableElements()
+                    setDrawnElements()
+                    drawState.value = DrawState.NextElement(drawnElements[0])
+                }
             }
         }
     }
