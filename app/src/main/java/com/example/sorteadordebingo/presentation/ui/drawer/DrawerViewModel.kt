@@ -118,6 +118,10 @@ class DrawerViewModel @Inject constructor(
         return drawnElements.size
     }
 
+    fun getCurrentTheme() : Theme {
+        return currentTheme
+    }
+
     private fun setAvailableElements() {
         viewModelScope.launch(Dispatchers.IO) {
             elements.collect() { response ->

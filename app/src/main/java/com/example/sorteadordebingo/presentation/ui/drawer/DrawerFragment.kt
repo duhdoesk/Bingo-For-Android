@@ -7,17 +7,27 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -110,8 +120,76 @@ class DrawerFragment : Fragment() {
         }
     }
 
+    @Preview
     @Composable
     fun StateNextElement() {
+        Column (
+            verticalArrangement = Arrangement.SpaceBetween,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .background(MaterialTheme.colors.background)
+                .fillMaxSize()
+                .padding(vertical = 16.dp, horizontal = 8.dp)
+                ) {
+            Text(
+                text = "Tema do Bingo: Bichos",
+                color = MaterialTheme.colors.secondaryVariant,
+//                text = "${stringResource(id = R.string.selected_theme)} ${viewModel.getCurrentTheme()}"
+            )
+
+            Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "4/60",
+                    color = MaterialTheme.colors.primary
+                )
+                Image(
+                    painter = painterResource(id = R.drawable.default_placeholder),
+                    contentDescription = "Element picture",
+                    modifier = Modifier
+                        .fillMaxWidth(0.6f)
+                        .padding(top = 16.dp)
+                )
+                Text(
+                    text = "Elemento Aleatório",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colors.primary
+                )
+            }
+
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Button(
+                    onClick = { /*TODO*/ },
+                    Modifier.fillMaxWidth(0.5f)
+                ) {
+                    Text(text = "PRÓXIMO")
+                }
+
+                Text(
+                    text = "Encerrar Sorteio",
+                    textDecoration = TextDecoration.Underline,
+                    color = MaterialTheme.colors.secondary,
+                    modifier = Modifier.padding(top = 12.dp)
+                )
+            }
+
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = "Sorteados:",
+                    color = MaterialTheme.colors.secondaryVariant
+                )
+            }
+        }
+    }
+
+    @Composable
+    fun StateFinished() {
 
     }
 

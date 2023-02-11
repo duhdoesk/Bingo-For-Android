@@ -11,4 +11,5 @@
 
 <!--    TELA DO SORTEADOR   -->
     <string name="pick_theme">Escolha um tema para o bingo:</string>
+    <string name="selected_theme">Tema do Bingo:</string>
 </resources>
