@@ -16,7 +16,7 @@ private val LightColors = lightColors(
     error = light_error,
     onError = white,
     primaryVariant = complementary,
-    secondaryVariant = Color.DarkGray
+    secondaryVariant = Color.Gray
 )
 
 
@@ -28,7 +28,7 @@ private val DarkColors = darkColors(
     error = dark_error,
     onError = black,
     primaryVariant = complementary,
-    secondaryVariant = Color.LightGray
+    secondaryVariant = Color.DarkGray
 )
 
 @Composable

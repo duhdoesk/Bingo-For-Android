@@ -15,6 +15,8 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.painterResource
@@ -32,6 +34,8 @@ import com.example.sorteadordebingo.R
 import com.example.sorteadordebingo.data.Theme
 import com.example.sorteadordebingo.presentation.ui.component.ThemeLazyColumnCard
 import com.example.sorteadordebingo.presentation.theme.AppTheme
+import com.example.sorteadordebingo.util.DEFAULT_IMAGE
+import com.example.sorteadordebingo.util.loadPicture
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
@@ -71,15 +75,14 @@ class DrawerFragment : Fragment() {
                 is DrawState.NotStarted -> {
                     StateNotStarted(themes)
                 }
-                is DrawState.NextElement -> {
-                    StateNextElement()
-                }
                 is DrawState.Starting -> {
-                    TODO()
+                    Starting()
+                }
+                is DrawState.NextElement -> {
+                    StateNextElement(false)
                 }
                 else -> {
-                    TODO()
-//                    StateFinished()
+                    StateNextElement(true)
                 }
             }
         }
@@ -131,24 +134,31 @@ class DrawerFragment : Fragment() {
                 .fillMaxSize()
                 .padding(vertical = 16.dp, horizontal = 8.dp)
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.default_placeholder),
-                contentDescription = "Theme picture",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(240.dp)
-                    .padding(top = 16.dp)
-            )
+            val theme = viewModel.getCurrentTheme()
+            val image = loadPicture(url = theme.theme_picture, defaultImage = DEFAULT_IMAGE).value
+
+            image?.let { img ->
+                Image(
+                    bitmap = img.asImageBitmap(),
+                    contentDescription = "Theme Picture.",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(240.dp)
+                        .padding(top = 16.dp)
+                        .clip(MaterialTheme.shapes.small)
+                )
+            }
 
             Text(
-                text = "Tema do Bingo",
+                text = ("Tema do Bingo: ${theme.theme_name}").uppercase(),
                 fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(top = 2.dp)
             )
 
             Button(
-                onClick = { /*TODO*/ },
+                onClick = { viewModel.drawNextElement() },
                 Modifier
                     .fillMaxWidth(0.5f)
                     .padding(top = 64.dp)
@@ -156,18 +166,19 @@ class DrawerFragment : Fragment() {
                 Text(text = "COMEÇAR SORTEIO")
             }
 
-            Text(
-                text = "Escolher outro tema",
-                textDecoration = TextDecoration.Underline,
-                color = MaterialTheme.colors.secondary,
-                modifier = Modifier.padding(top = 12.dp)
-            )
+            Button(
+                onClick = { viewModel.resetDraw() },
+                colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondaryVariant),
+                modifier = Modifier
+                    .fillMaxWidth(0.5f)
+            ) {
+                Text(text = "MUDAR TEMA")
+            }
         }
     }
 
-    @Preview
     @Composable
-    fun StateNextElement() {
+    fun StateNextElement(finished: Boolean) {
         Column (
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -206,19 +217,7 @@ class DrawerFragment : Fragment() {
             }
 
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Button(
-                    onClick = { /*TODO*/ },
-                    Modifier.fillMaxWidth(0.5f)
-                ) {
-                    Text(text = "PRÓXIMO")
-                }
-
-                Text(
-                    text = "Encerrar Sorteio",
-                    textDecoration = TextDecoration.Underline,
-                    color = MaterialTheme.colors.secondary,
-                    modifier = Modifier.padding(top = 12.dp)
-                )
+                if ( !finished ) { StillDrawing() } else { DrawingDone() }
             }
 
             Column(
@@ -233,10 +232,39 @@ class DrawerFragment : Fragment() {
         }
     }
 
-    @Preview
     @Composable
-    fun StateFinished() {
+    fun StillDrawing() {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Button(
+                onClick = { /*TODO*/ },
+                Modifier.fillMaxWidth(0.5f)
+            ) {
+                Text(text = "PRÓXIMO")
+            }
 
+            Text(
+                text = "Encerrar Sorteio",
+                textDecoration = TextDecoration.Underline,
+                color = MaterialTheme.colors.secondary,
+                modifier = Modifier.padding(top = 8.dp)
+            )
+        }
+    }
+
+    @Composable
+    fun DrawingDone() {
+        Text(
+            text = "Todas as pedras já foram sorteadas! Bingo encerrado."
+        )
+
+        Button(
+            onClick = { /*TODO*/ },
+            Modifier
+                .fillMaxWidth(0.5f)
+                .padding(top = 12.dp)
+        ) {
+            Text(text = "NOVO SORTEIO")
+        }
     }
 
 //    //    Função responsável pela criação do menu suspenso
