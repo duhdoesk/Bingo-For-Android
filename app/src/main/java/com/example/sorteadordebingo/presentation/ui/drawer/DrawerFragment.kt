@@ -3,7 +3,6 @@
 package com.example.sorteadordebingo.presentation.ui.drawer
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,14 +13,12 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
@@ -77,6 +74,9 @@ class DrawerFragment : Fragment() {
                 is DrawState.NextElement -> {
                     StateNextElement()
                 }
+                is DrawState.Starting -> {
+                    TODO()
+                }
                 else -> {
                     TODO()
 //                    StateFinished()
@@ -111,12 +111,57 @@ class DrawerFragment : Fragment() {
                         ThemeLazyColumnCard(
                             theme = theme,
                             onClick = {
-                                viewModel.startDraw(theme)
+                                viewModel.setDrawThemeAndElements(theme)
                             }
                         )
                     }
                 }
             }
+        }
+    }
+
+    @Preview
+    @Composable
+    fun Starting() {
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .background(MaterialTheme.colors.background)
+                .fillMaxSize()
+                .padding(vertical = 16.dp, horizontal = 8.dp)
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.default_placeholder),
+                contentDescription = "Theme picture",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(240.dp)
+                    .padding(top = 16.dp)
+            )
+
+            Text(
+                text = "Tema do Bingo",
+                fontSize = 16.sp,
+                modifier = Modifier.padding(top = 2.dp)
+            )
+
+            Button(
+                onClick = { /*TODO*/ },
+                Modifier
+                    .fillMaxWidth(0.5f)
+                    .padding(top = 64.dp)
+            ) {
+                Text(text = "COMEÇAR SORTEIO")
+            }
+
+            Text(
+                text = "Escolher outro tema",
+                textDecoration = TextDecoration.Underline,
+                color = MaterialTheme.colors.secondary,
+                modifier = Modifier.padding(top = 12.dp)
+            )
         }
     }
 
@@ -188,6 +233,7 @@ class DrawerFragment : Fragment() {
         }
     }
 
+    @Preview
     @Composable
     fun StateFinished() {
 
