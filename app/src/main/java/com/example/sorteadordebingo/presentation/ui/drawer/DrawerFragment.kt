@@ -19,7 +19,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -223,7 +222,7 @@ class DrawerFragment : Fragment() {
                     color = MaterialTheme.colors.primary
                 )
 
-                (drawState as DrawState.NextElement).nextElement.let {
+                (drawState as DrawState.Drawing).nextElement.let {
                     val image = loadPicture(url = it.element_picture, defaultImage = DEFAULT_IMAGE).value
 
                     image?.let { img ->
@@ -247,7 +246,7 @@ class DrawerFragment : Fragment() {
 
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 when (drawState) {
-                    is DrawState.NextElement -> {
+                    is DrawState.Drawing -> {
                         StillDrawing()
                     }
                     else -> {
