@@ -3,12 +3,10 @@ package com.example.sorteadordebingo.data
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import org.jetbrains.annotations.NotNull
-import javax.annotation.Nonnull
 
 @Entity(tableName = "Theme")
-data class Theme (
-    @PrimaryKey(autoGenerate = false) val theme_id: Long,
-    @ColumnInfo val theme_name: String = "",
-    @ColumnInfo val theme_picture: String = ""
+data class Theme(
+    @PrimaryKey(autoGenerate = false) @ColumnInfo(name = "theme_id") val themeId: Long,
+    @ColumnInfo(name = "theme_name") val themeName: String = "",
+    @ColumnInfo(name = "theme_picture") val themePicture: String = ""
 )

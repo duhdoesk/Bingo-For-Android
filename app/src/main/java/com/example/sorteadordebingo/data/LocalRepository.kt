@@ -11,33 +11,57 @@ import javax.inject.Singleton
 
 @Singleton
 class LocalRepository @Inject constructor(
-    private val elementDao: ElementDao,
-    private val themeDao: ThemeDao
-    ) {
+    private val sessionDao: SessionDao,
+    private val themeDao: ThemeDao,
+    private val elementDao: ElementDao
+) {
 
-    private val coroutineScope = CoroutineScope(Dispatchers.Main)
+    /* SESSION FUNCTIONS */
 
-    fun updateElement(id: Long, draw: Int) {
-        coroutineScope.launch(Dispatchers.IO) {
-            elementDao.update(id, draw)
-        }
-    }
+    suspend fun createNewSession(themeId: Int) =
+        sessionDao.createNewSession(themeId)
 
-    fun resetDraw(id: List<Long>) {
-        for (i in id) {
-            elementDao.update(i, 0)
-        }
-    }
+    suspend fun finishSession(sessionId: Int) =
+        sessionDao.finishSession(sessionId)
 
-    fun getThemes() = themeDao.getThemes()
+    suspend fun getActiveSession(): Session? =
+        sessionDao.getActiveSession()
 
-    fun getElements() = elementDao.getElements()
+    suspend fun getSessionThemeId(sessionId: Int): Int =
+        sessionDao.getSessionThemeId(sessionId)
 
-    fun getAvailableElements(themeId : Long) = elementDao.getAvailableElements(themeId)
+    suspend fun setSessionThemeId(sessionId: Int, themeId: Int) =
+        sessionDao.setSessionThemeId(sessionId, themeId)
 
-    fun getDrawnElements(themeId : Long) = elementDao.getDrawnElements(themeId)
+    suspend fun getDrawnElementsIds(sessionId: Int): String =
+        sessionDao.getDrawnElementsIds(sessionId)
+
+    suspend fun setDrawnElementsIds(sessionId: Int, idList: String) =
+        sessionDao.setDrawnElementsIds(sessionId, idList)
 
 
+    /* THEME FUNCTIONS */
+
+    suspend fun getAllThemes(): List<Theme> =
+        themeDao.getAllThemes()
+
+    suspend fun getTheme(themeId: Int): Theme =
+        themeDao.getTheme(themeId)
+
+
+    /* ELEMENT FUNCTIONS */
+
+    suspend fun getAllElements(): List<Element> =
+        elementDao.getAllElements()
+
+    suspend fun getThemeElements(themeId: Int): List<Element> =
+        elementDao.getThemeElements(themeId)
+
+    suspend fun getElement(elementId: Int): Element =
+        elementDao.getElement(elementId)
+
+
+    /* REPOSITORY INSTANCE */
 
     companion object {
 
@@ -45,9 +69,13 @@ class LocalRepository @Inject constructor(
         @Volatile
         private var instance: LocalRepository? = null
 
-        fun getInstance(elementDao: ElementDao, themeDao: ThemeDao) =
+        fun getInstance(
+            sessionDao: SessionDao,
+            themeDao: ThemeDao,
+            elementDao: ElementDao
+        ) =
             instance ?: synchronized(this) {
-                instance ?: LocalRepository(elementDao, themeDao).also { instance = it }
+                instance ?: LocalRepository(sessionDao, themeDao, elementDao).also { instance = it }
             }
     }
 }

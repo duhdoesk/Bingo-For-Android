@@ -7,6 +7,7 @@ import androidx.room.RoomDatabase
 
 @Database(
     entities = [
+        Session::class,
         Theme::class,
         Element::class
     ],
@@ -17,6 +18,7 @@ abstract class AppDatabase : RoomDatabase() {
 
     abstract fun elementDao(): ElementDao
     abstract fun themeDao(): ThemeDao
+    abstract fun sessionDao(): SessionDao
 
     companion object {
 

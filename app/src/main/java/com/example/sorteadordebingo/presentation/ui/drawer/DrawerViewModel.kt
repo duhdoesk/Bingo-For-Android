@@ -1,19 +1,22 @@
 package com.example.sorteadordebingo.presentation.ui.drawer
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.sorteadordebingo.data.Element
 import com.example.sorteadordebingo.data.LocalRepository
+import com.example.sorteadordebingo.data.Session
 import com.example.sorteadordebingo.data.Theme
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
 
 sealed class DrawState {
     object NotStarted : DrawState()
+    object Loading : DrawState()
     object Starting : DrawState()
     data class Finished(val nextElement: Element) : DrawState()
     data class NextElement(val nextElement: Element) : DrawState()
@@ -24,19 +27,24 @@ class DrawerViewModel @Inject constructor(
     private val localRepository: LocalRepository
 ) : ViewModel() {
 
-    //    STATE
-    private var drawState = MutableStateFlow<DrawState>(DrawState.NotStarted)
+    /* STATE VARIABLES */
+    private var drawState = MutableStateFlow<DrawState>(DrawState.Loading)
     val state = drawState.asStateFlow()
 
-    //    BINGO THEMES
+
+    /* SESSION VARIABLES */
+    lateinit var session: Session
+
+
+    /* THEME VARIABLES */
     val themes = localRepository.getThemes()
     private lateinit var currentTheme: Theme
 
-    //    BINGO ELEMENTS
+
+    /* ELEMENT VARIABLES */
     private val elements = localRepository.getElements()
     private var availableElements = mutableListOf<Element>()
     private var drawnElements = mutableListOf<Element>()
-    private var count = if (drawnElements.isEmpty()) 0 else drawnElements[0].element_draw
 
     init {
         checkSavedState()
@@ -85,9 +93,15 @@ class DrawerViewModel @Inject constructor(
     fun resetDraw() {
         /* fill a list with the id of all the already drawn elements and then passes it to
         repository in order to reset their draw status in the db */
-        val idList = mutableListOf<Long>()
-        for (element in drawnElements) { idList.add(element.element_id) }
-        localRepository.resetDraw(idList)
+        viewModelScope.launch(Dispatchers.IO) {
+            val idList = mutableListOf<Long>()
+            for (element in drawnElements) {
+                idList.add(element.element_id)
+            }
+            localRepository.resetDraw(idList)
+            setAvailableElements()
+            setDrawnElements()
+        }
 
         /* updating the drawState to NotStarted so the user can select a new theme and start
         drawing again */
@@ -99,15 +113,7 @@ class DrawerViewModel @Inject constructor(
     }
 
     fun getAmountOfElements(): Int {
-        var amount = 0
-
-        viewModelScope.launch(Dispatchers.IO) {
-            elements.collect() { response ->
-                amount = response.size
-            }
-        }
-
-        return amount
+        return availableElements.size + drawnElements.size
     }
 
     fun getAmountOfAvailableElements(): Int {
@@ -118,16 +124,27 @@ class DrawerViewModel @Inject constructor(
         return drawnElements.size
     }
 
-    fun getCurrentTheme() : Theme {
+    fun getCurrentTheme(): Theme {
         return currentTheme
+    }
+
+    fun setCurrentTheme(theme: Theme) {
+        currentTheme = theme
     }
 
     /* Function to search db and set the availableElements list */
     private fun setAvailableElements() {
         viewModelScope.launch(Dispatchers.IO) {
             elements.collect() { response ->
-                availableElements =
-                    response.filter { it.element_theme == currentTheme.theme_id && it.element_draw == 0 } as MutableList<Element>
+                val availableList =
+                    response.filter { it.element_theme == currentTheme.theme_id && it.element_draw == 0 }
+                            as MutableList<Element>
+
+                availableElements = if (availableList.isEmpty()) {
+                    mutableListOf()
+                } else {
+                    availableList.toMutableList()
+                }
             }
         }
     }
@@ -136,45 +153,41 @@ class DrawerViewModel @Inject constructor(
     private fun setDrawnElements() {
         viewModelScope.launch(Dispatchers.IO) {
             elements.collect() { response ->
-                drawnElements = response
+                val drawnList = response
                     .filter { it.element_theme == currentTheme.theme_id && it.element_draw > 0 }
-                    .sortedBy { it.element_draw } as MutableList<Element>
+                    .sortedBy { it.element_draw }
+
+                drawnElements = if (drawnList.isEmpty()) {
+                    mutableListOf()
+                } else {
+                    drawnList.toMutableList()
+                }
             }
         }
     }
 
     private fun checkSavedState() {
-        val allElements = mutableListOf<Element>()
 
-        /* Searches the db to see if any element has been draw */
         viewModelScope.launch(Dispatchers.IO) {
-            elements.collect() { response ->
-                for (e in response) {
-                    if (e.element_draw > 0) {
-                        allElements.add(e)
-                    }
-                }
+            themes.collect() { response ->
+                setCurrentTheme(response.find { t -> t.isCurrent })
+                this.coroutineContext.job.cancel()
 
-                /* Checks if the list was filled by any element */
-                if (allElements.isNotEmpty()) {
-                    themes.collect() { resp ->
-                        currentTheme = resp.find { it.theme_id == allElements[0].element_theme }!!
-                    }
-
-                    /* If any element has been drawn, sets both lists to be manipulated
-                    * by the viewmodel */
-                    setAvailableElements()
-                    setDrawnElements()
-
-                    /* Sort drawn elements list descending by element id to put in order of draw
-                    * and then sets the first one as the counter */
-                    drawnElements.sortByDescending { it.element_draw }
-                    count = drawnElements[0].element_draw
-
-                    /* Changes app state to compose the screen showing the drawn element */
-                    drawState.value = DrawState.NextElement(drawnElements[0])
-                }
             }
         }
+
+        /* If any element has been drawn, sets both lists to be manipulated
+        * by the viewmodel */
+        setAvailableElements()
+        setDrawnElements()
+
+        /* Sort drawn elements list descending by element id to put in order of draw
+        * and then sets the first one as the counter */
+        drawnElements.sortByDescending { it.element_draw }
+        count = drawnElements[0].element_draw
+
+        /* Changes app state to compose the screen showing the drawn element */
+        drawState.value = DrawState.NextElement(drawnElements[0])
     }
+}
 }

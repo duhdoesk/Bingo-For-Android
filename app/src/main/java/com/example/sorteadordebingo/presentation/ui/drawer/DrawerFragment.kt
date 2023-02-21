@@ -23,7 +23,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -66,6 +65,14 @@ class DrawerFragment : Fragment() {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+    }
+
+    override fun onPause() {
+        super.onPause()
+    }
+
     @Composable
     private fun SetDrawerView(drawState: DrawState) {
         val themes by viewModel.themes.collectAsState(initial = emptyList())
@@ -75,14 +82,14 @@ class DrawerFragment : Fragment() {
                 is DrawState.NotStarted -> {
                     StateNotStarted(themes)
                 }
+                is DrawState.Loading -> {
+                    Loading()
+                }
                 is DrawState.Starting -> {
                     Starting()
                 }
-                is DrawState.NextElement -> {
-                    StateNextElement(false)
-                }
                 else -> {
-                    StateNextElement(true)
+                    StateNextElement(drawState)
                 }
             }
         }
@@ -120,6 +127,21 @@ class DrawerFragment : Fragment() {
                     }
                 }
             }
+        }
+    }
+
+    @Composable
+    private fun Loading() {
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 8.dp, vertical = 16.dp)
+        ) {
+           Text(
+               text = "Aguarde enquanto carregamos o status do último sorteio"
+           )
         }
     }
 
@@ -178,7 +200,7 @@ class DrawerFragment : Fragment() {
     }
 
     @Composable
-    fun StateNextElement(finished: Boolean) {
+    fun StateNextElement(drawState: DrawState) {
         Column (
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -188,9 +210,8 @@ class DrawerFragment : Fragment() {
                 .padding(vertical = 16.dp, horizontal = 8.dp)
                 ) {
             Text(
-                text = "Tema do Bingo: Bichos",
-                color = MaterialTheme.colors.secondaryVariant,
-//                text = "${stringResource(id = R.string.selected_theme)} ${viewModel.getCurrentTheme()}"
+                text = "${stringResource(id = R.string.selected_theme)} ${viewModel.getCurrentTheme().theme_name}",
+                color = MaterialTheme.colors.secondaryVariant
             )
 
             Column(
@@ -198,26 +219,41 @@ class DrawerFragment : Fragment() {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "4/60",
+                    text = "${viewModel.getAmountOfDrawnElements()} / ${viewModel.getAmountOfElements()}",
                     color = MaterialTheme.colors.primary
                 )
-                Image(
-                    painter = painterResource(id = R.drawable.default_placeholder),
-                    contentDescription = "Element picture",
-                    modifier = Modifier
-                        .fillMaxWidth(0.6f)
-                        .padding(top = 16.dp)
-                )
-                Text(
-                    text = "Elemento Aleatório",
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colors.primary
-                )
+
+                (drawState as DrawState.NextElement).nextElement.let {
+                    val image = loadPicture(url = it.element_picture, defaultImage = DEFAULT_IMAGE).value
+
+                    image?.let { img ->
+                        Image(
+                            bitmap = img.asImageBitmap(),
+                            contentDescription = "Element picture.",
+                            modifier = Modifier
+                                .fillMaxWidth(0.6f)
+                                .padding(top = 16.dp)
+                        )
+                    }
+
+                    Text(
+                        text = it.element_name,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colors.primary
+                    )
+                }
             }
 
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                if ( !finished ) { StillDrawing() } else { DrawingDone() }
+                when (drawState) {
+                    is DrawState.NextElement -> {
+                        StillDrawing()
+                    }
+                    else -> {
+                        DrawingDone()
+                    }
+                }
             }
 
             Column(
@@ -236,18 +272,19 @@ class DrawerFragment : Fragment() {
     fun StillDrawing() {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Button(
-                onClick = { /*TODO*/ },
+                onClick = { viewModel.drawNextElement() },
                 Modifier.fillMaxWidth(0.5f)
             ) {
                 Text(text = "PRÓXIMO")
             }
 
-            Text(
-                text = "Encerrar Sorteio",
-                textDecoration = TextDecoration.Underline,
-                color = MaterialTheme.colors.secondary,
-                modifier = Modifier.padding(top = 8.dp)
-            )
+            Button(
+                onClick = { viewModel.resetDraw() },
+                colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondaryVariant),
+                modifier = Modifier.fillMaxWidth(0.5f)
+            ) {
+                Text(text = "ENCERRAR SORTEIO")
+            }
         }
     }
 
