@@ -15,7 +15,7 @@ import javax.inject.Inject
 sealed class DrawState {
     object NotStarted : DrawState()
     object Loading : DrawState()
-    object Starting : DrawState()
+    object Waiting : DrawState()
     data class Finished(val nextElement: Element) : DrawState()
     data class Drawing(val nextElement: Element) : DrawState()
 }
@@ -35,7 +35,7 @@ class DrawerViewModel @Inject constructor(
 
 
     /* THEME VARIABLES */
-    private lateinit var themes: List<Theme>
+    private var themes: List<Theme> = emptyList()
     private lateinit var currentTheme: Theme
 
 
@@ -62,19 +62,21 @@ class DrawerViewModel @Inject constructor(
             if (session == null) {
                 drawState.value = DrawState.NotStarted
             } else {
-                session?.let { s ->
+                session?.let { session ->
 
-                    setCurrentTheme(themes.find { t -> t.themeId == s.sessionTheme }!!)
+                    setCurrentTheme(themes.find { theme -> theme.themeId == session.sessionTheme }!!)
 
                     searchThemeElements()
 
                     val elementsIds =
-                        s.drawnElements.split(",").toMutableList()
+                        session.drawnElements.split(",").onEach { it.trim() }
+                            .filterNot { it.isEmpty() }
 
-                    elementsIds.forEach() { it ->
-                        drawnElements.add(
-                            themeElements.find { e -> e.elementId == it.toInt() }!!
-                        )
+                    elementsIds.forEach() { drawnElementId ->
+                        themeElements.find { e -> e.elementId == drawnElementId.toInt() }
+                            ?.let { drawnElement ->
+                                drawnElements.add(drawnElement)
+                            }
                     }
 
                     availableElements =
@@ -101,23 +103,42 @@ class DrawerViewModel @Inject constructor(
     in the database.
      */
     private suspend fun updateDrawnElementsIds(elementId: String) {
-        var idString = localRepository.getDrawnElementsIds(session!!.sessionId)
+        val drawnElements = session?.drawnElements.orEmpty().plus("$elementId,")
+
+        session = session?.copy(drawnElements = drawnElements)
+
+        session?.let {
+            localRepository.setDrawnElementsIds(it.sessionId, it.drawnElements)
+        }
+    }
+
+    fun waitingForStart(theme: Theme) {
+        setCurrentTheme(theme)
+        drawState.value = DrawState.Waiting
     }
 
     /*
     This function is gonna be called when the user selects the theme and decides to
     start the draw.
-    It must set the app state to Drawing and prepare the available and drawn elements lists.
+    It must set the app state to Starting and prepare the available and drawn elements lists.
     It also assumes that all the variables have been cleared in the reset method.
      */
     fun startDraw(theme: Theme) {
-        setCurrentTheme(theme)
+        viewModelScope.launch(Dispatchers.IO) {
+            val session = Session(sessionTheme = theme.themeId)
 
-        viewModelScope.launch(Dispatchers.IO) { searchThemeElements() }
-            .invokeOnCompletion {
-                availableElements = themeElements
-                drawNextElement()
-            }
+            val sessionId = localRepository.createNewSession(session)
+
+            /*
+            Creates a copy of session, modifying what is between parentheses
+             */
+            this@DrawerViewModel.session = session.copy(sessionId = sessionId)
+
+            searchThemeElements()
+        }.invokeOnCompletion {
+            availableElements = themeElements
+            drawNextElement()
+        }
     }
 
     /*
@@ -135,7 +156,11 @@ class DrawerViewModel @Inject constructor(
 
         availableElements.removeFirst()
 
-        drawState.value = DrawState.Drawing(element)
+        if (availableElements.isEmpty()) {
+            drawState.value = DrawState.Finished(element)
+        } else {
+            drawState.value = DrawState.Drawing(element)
+        }
 
         viewModelScope.launch(Dispatchers.IO) {
             updateDrawnElementsIds(element.elementId.toString())
@@ -147,6 +172,14 @@ class DrawerViewModel @Inject constructor(
     It must clear all the lists and variables.
      */
     fun resetDraw() {
+        themeElements.clear()
+        drawnElements.clear()
+        availableElements.clear()
+        drawState.value = DrawState.NotStarted
+
+        viewModelScope.launch(Dispatchers.IO) {
+            localRepository.finishSession(session!!.sessionId)
+        }
     }
 
     /*
@@ -167,6 +200,13 @@ class DrawerViewModel @Inject constructor(
 
     fun getAmountOfDrawnElements(): Int {
         return drawnElements.size
+    }
+
+    /*
+    This function returns a list containing all the available themes.
+     */
+    fun getThemes(): List<Theme> {
+        return themes
     }
 
     /*

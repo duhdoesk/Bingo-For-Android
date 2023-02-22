@@ -6,8 +6,8 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "Session")
 data class Session(
-    @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "session_id") val sessionId: Int,
-    @ColumnInfo(name = "session_theme") val sessionTheme: Int = 0,
+    @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "session_id") val sessionId: Long = 0L,
+    @ColumnInfo(name = "session_theme") val sessionTheme: Int,
     @ColumnInfo(name = "drawn_elements") val drawnElements: String = "",
     @ColumnInfo(name = "is_completed") val isCompleted: Boolean = false
 )

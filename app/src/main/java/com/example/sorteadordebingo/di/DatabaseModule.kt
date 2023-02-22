@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.example.sorteadordebingo.data.AppDatabase
 import com.example.sorteadordebingo.data.ElementDao
+import com.example.sorteadordebingo.data.SessionDao
 import com.example.sorteadordebingo.data.ThemeDao
 import dagger.Module
 import dagger.Provides
@@ -18,7 +19,7 @@ class DatabaseModule {
 
     @Singleton
     @Provides
-    fun provideDatabase(@ApplicationContext context: Context) : AppDatabase =
+    fun provideDatabase(@ApplicationContext context: Context): AppDatabase =
         Room.databaseBuilder(
             context,
             AppDatabase::class.java,
@@ -29,13 +30,19 @@ class DatabaseModule {
 
     @Singleton
     @Provides
-    fun provideElementDao(appDatabase: AppDatabase) : ElementDao {
+    fun provideElementDao(appDatabase: AppDatabase): ElementDao {
         return appDatabase.elementDao()
     }
 
     @Singleton
     @Provides
-    fun provideThemeDao(appDatabase: AppDatabase) : ThemeDao {
+    fun provideThemeDao(appDatabase: AppDatabase): ThemeDao {
         return appDatabase.themeDao()
+    }
+
+    @Singleton
+    @Provides
+    fun provideSessionDao(appDatabase: AppDatabase): SessionDao {
+        return appDatabase.sessionDao()
     }
 }

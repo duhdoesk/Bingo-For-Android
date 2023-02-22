@@ -37,12 +37,12 @@ fun ThemeLazyColumnCard(theme: Theme, onClick: () -> Unit) {
                 .wrapContentHeight()
         ) {
             Text(
-                text = theme.theme_name,
+                text = theme.themeName,
                 modifier = Modifier
                     .padding(start = 16.dp)
             )
 
-            theme.theme_picture.let {
+            theme.themePicture.let {
                 val picture = loadPicture(
                     url = it,
                     defaultImage = R.drawable.default_placeholder

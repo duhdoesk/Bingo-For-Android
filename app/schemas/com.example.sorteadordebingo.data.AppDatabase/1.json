@@ -2,26 +2,64 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "b04fea8bdb1f3bd9c26d37bdfc79a45f",
+    "identityHash": "a404cdb925e4848a23f98a2c36f103b0",
     "entities": [
+      {
+        "tableName": "Session",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`session_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `session_theme` INTEGER NOT NULL, `drawn_elements` TEXT NOT NULL, `is_completed` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "sessionId",
+            "columnName": "session_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sessionTheme",
+            "columnName": "session_theme",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "drawnElements",
+            "columnName": "drawn_elements",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isCompleted",
+            "columnName": "is_completed",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "session_id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
       {
         "tableName": "Theme",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`theme_id` INTEGER NOT NULL, `theme_name` TEXT NOT NULL, `theme_picture` TEXT NOT NULL, PRIMARY KEY(`theme_id`))",
         "fields": [
           {
-            "fieldPath": "theme_id",
+            "fieldPath": "themeId",
             "columnName": "theme_id",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "theme_name",
+            "fieldPath": "themeName",
             "columnName": "theme_name",
             "affinity": "TEXT",
             "notNull": true
           },
           {
-            "fieldPath": "theme_picture",
+            "fieldPath": "themePicture",
             "columnName": "theme_picture",
             "affinity": "TEXT",
             "notNull": true
@@ -38,34 +76,28 @@
       },
       {
         "tableName": "Element",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`element_id` INTEGER NOT NULL, `element_name` TEXT NOT NULL, `element_picture` TEXT NOT NULL, `element_draw` INTEGER NOT NULL, `element_theme` INTEGER NOT NULL, PRIMARY KEY(`element_id`), FOREIGN KEY(`element_theme`) REFERENCES `Theme`(`theme_id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`element_id` INTEGER NOT NULL, `element_name` TEXT NOT NULL, `element_picture` TEXT NOT NULL, `element_theme` INTEGER NOT NULL, PRIMARY KEY(`element_id`))",
         "fields": [
           {
-            "fieldPath": "element_id",
+            "fieldPath": "elementId",
             "columnName": "element_id",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "element_name",
+            "fieldPath": "elementName",
             "columnName": "element_name",
             "affinity": "TEXT",
             "notNull": true
           },
           {
-            "fieldPath": "element_picture",
+            "fieldPath": "elementPicture",
             "columnName": "element_picture",
             "affinity": "TEXT",
             "notNull": true
           },
           {
-            "fieldPath": "element_draw",
-            "columnName": "element_draw",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "element_theme",
+            "fieldPath": "elementTheme",
             "columnName": "element_theme",
             "affinity": "INTEGER",
             "notNull": true
@@ -78,25 +110,13 @@
           ]
         },
         "indices": [],
-        "foreignKeys": [
-          {
-            "table": "Theme",
-            "onDelete": "NO ACTION",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "element_theme"
-            ],
-            "referencedColumns": [
-              "theme_id"
-            ]
-          }
-        ]
+        "foreignKeys": []
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'b04fea8bdb1f3bd9c26d37bdfc79a45f')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a404cdb925e4848a23f98a2c36f103b0')"
     ]
   }
 }

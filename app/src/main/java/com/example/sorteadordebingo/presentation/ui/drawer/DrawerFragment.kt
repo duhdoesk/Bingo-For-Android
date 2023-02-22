@@ -64,17 +64,9 @@ class DrawerFragment : Fragment() {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-    }
-
-    override fun onPause() {
-        super.onPause()
-    }
-
     @Composable
     private fun SetDrawerView(drawState: DrawState) {
-        val themes by viewModel.themes.collectAsState(initial = emptyList())
+        val themes = viewModel.getThemes()
 
         if (themes.isNotEmpty()) {
             when (drawState) {
@@ -84,8 +76,8 @@ class DrawerFragment : Fragment() {
                 is DrawState.Loading -> {
                     Loading()
                 }
-                is DrawState.Starting -> {
-                    Starting()
+                is DrawState.Waiting -> {
+                    Waiting()
                 }
                 else -> {
                     StateNextElement(drawState)
@@ -93,7 +85,6 @@ class DrawerFragment : Fragment() {
             }
         }
     }
-
 
     @Composable
     private fun StateNotStarted(themes: List<Theme>) {
@@ -120,7 +111,7 @@ class DrawerFragment : Fragment() {
                         ThemeLazyColumnCard(
                             theme = theme,
                             onClick = {
-                                viewModel.setDrawThemeAndElements(theme)
+                                viewModel.waitingForStart(theme)
                             }
                         )
                     }
@@ -139,14 +130,15 @@ class DrawerFragment : Fragment() {
                 .padding(horizontal = 8.dp, vertical = 16.dp)
         ) {
            Text(
-               text = "Aguarde enquanto carregamos o status do último sorteio"
+               text = "Aguarde enquanto carregamos o status do último sorteio",
+               textAlign = TextAlign.Center
            )
         }
     }
 
     @Preview
     @Composable
-    fun Starting() {
+    fun Waiting() {
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -156,7 +148,7 @@ class DrawerFragment : Fragment() {
                 .padding(vertical = 16.dp, horizontal = 8.dp)
         ) {
             val theme = viewModel.getCurrentTheme()
-            val image = loadPicture(url = theme.theme_picture, defaultImage = DEFAULT_IMAGE).value
+            val image = loadPicture(url = theme.themePicture, defaultImage = DEFAULT_IMAGE).value
 
             image?.let { img ->
                 Image(
@@ -172,14 +164,14 @@ class DrawerFragment : Fragment() {
             }
 
             Text(
-                text = ("Tema do Bingo: ${theme.theme_name}").uppercase(),
+                text = ("Tema do Bingo: ${theme.themeName}").uppercase(),
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(top = 2.dp)
             )
 
             Button(
-                onClick = { viewModel.drawNextElement() },
+                onClick = { viewModel.startDraw(theme) },
                 Modifier
                     .fillMaxWidth(0.5f)
                     .padding(top = 64.dp)
@@ -209,7 +201,7 @@ class DrawerFragment : Fragment() {
                 .padding(vertical = 16.dp, horizontal = 8.dp)
                 ) {
             Text(
-                text = "${stringResource(id = R.string.selected_theme)} ${viewModel.getCurrentTheme().theme_name}",
+                text = "${stringResource(id = R.string.selected_theme)} ${viewModel.getCurrentTheme().themeName}",
                 color = MaterialTheme.colors.secondaryVariant
             )
 
@@ -223,7 +215,7 @@ class DrawerFragment : Fragment() {
                 )
 
                 (drawState as DrawState.Drawing).nextElement.let {
-                    val image = loadPicture(url = it.element_picture, defaultImage = DEFAULT_IMAGE).value
+                    val image = loadPicture(url = it.elementPicture, defaultImage = DEFAULT_IMAGE).value
 
                     image?.let { img ->
                         Image(
@@ -236,7 +228,7 @@ class DrawerFragment : Fragment() {
                     }
 
                     Text(
-                        text = it.element_name,
+                        text = it.elementName,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colors.primary

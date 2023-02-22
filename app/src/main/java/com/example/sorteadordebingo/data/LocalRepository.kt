@@ -12,25 +12,25 @@ class LocalRepository @Inject constructor(
 
     /* SESSION FUNCTIONS */
 
-    suspend fun createNewSession(themeId: Int) =
-        sessionDao.createNewSession(themeId)
+    suspend fun createNewSession(session: Session) =
+        sessionDao.createNewSession(session)
 
-    suspend fun finishSession(sessionId: Int) =
+    suspend fun finishSession(sessionId: Long) =
         sessionDao.finishSession(sessionId)
 
     suspend fun getActiveSession(): Session? =
         sessionDao.getActiveSession()
 
-    suspend fun getSessionThemeId(sessionId: Int): Int =
+    suspend fun getSessionThemeId(sessionId: Long): Int =
         sessionDao.getSessionThemeId(sessionId)
 
-    suspend fun setSessionThemeId(sessionId: Int, themeId: Int) =
+    suspend fun setSessionThemeId(sessionId: Long, themeId: Int) =
         sessionDao.setSessionThemeId(sessionId, themeId)
 
-    suspend fun getDrawnElementsIds(sessionId: Int): String =
+    suspend fun getDrawnElementsIds(sessionId: Long): String =
         sessionDao.getDrawnElementsIds(sessionId)
 
-    suspend fun setDrawnElementsIds(sessionId: Int, idList: String) =
+    suspend fun setDrawnElementsIds(sessionId: Long, idList: String) =
         sessionDao.setDrawnElementsIds(sessionId, idList)
 
 
