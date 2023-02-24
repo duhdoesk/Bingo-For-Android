@@ -2,6 +2,9 @@
 
 package com.example.sorteadordebingo.presentation.ui.drawer
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,12 +13,14 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
@@ -34,6 +39,7 @@ import com.example.sorteadordebingo.presentation.ui.component.ThemeLazyColumnCar
 import com.example.sorteadordebingo.presentation.theme.AppTheme
 import com.example.sorteadordebingo.util.DEFAULT_IMAGE
 import com.example.sorteadordebingo.util.loadPicture
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
@@ -129,10 +135,10 @@ class DrawerFragment : Fragment() {
                 .fillMaxSize()
                 .padding(horizontal = 8.dp, vertical = 16.dp)
         ) {
-           Text(
-               text = "Aguarde enquanto carregamos o status do último sorteio",
-               textAlign = TextAlign.Center
-           )
+            Text(
+                text = stringResource(id = R.string.please_wait),
+                textAlign = TextAlign.Center
+            )
         }
     }
 
@@ -164,7 +170,7 @@ class DrawerFragment : Fragment() {
             }
 
             Text(
-                text = ("Tema do Bingo: ${theme.themeName}").uppercase(),
+                text = "${stringResource(id = R.string.selected_theme)} ${theme.themeName.uppercase()}",
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(top = 2.dp)
@@ -176,7 +182,7 @@ class DrawerFragment : Fragment() {
                     .fillMaxWidth(0.5f)
                     .padding(top = 64.dp)
             ) {
-                Text(text = "COMEÇAR SORTEIO")
+                Text(text = stringResource(id = R.string.start_draw_button).uppercase())
             }
 
             Button(
@@ -185,21 +191,28 @@ class DrawerFragment : Fragment() {
                 modifier = Modifier
                     .fillMaxWidth(0.5f)
             ) {
-                Text(text = "MUDAR TEMA")
+                Text(text = stringResource(id = R.string.change_theme).uppercase())
             }
         }
     }
 
     @Composable
     fun StateNextElement(drawState: DrawState) {
-        Column (
+        val element = when (drawState) {
+            is DrawState.Drawing -> drawState.nextElement
+            else -> {
+                (drawState as DrawState.Finished).nextElement
+            }
+        }
+
+        Column(
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .background(MaterialTheme.colors.background)
                 .fillMaxSize()
                 .padding(vertical = 16.dp, horizontal = 8.dp)
-                ) {
+        ) {
             Text(
                 text = "${stringResource(id = R.string.selected_theme)} ${viewModel.getCurrentTheme().themeName}",
                 color = MaterialTheme.colors.secondaryVariant
@@ -214,16 +227,17 @@ class DrawerFragment : Fragment() {
                     color = MaterialTheme.colors.primary
                 )
 
-                (drawState as DrawState.Drawing).nextElement.let {
-                    val image = loadPicture(url = it.elementPicture, defaultImage = DEFAULT_IMAGE).value
+                element.let {
+                    val image =
+                        loadPicture(url = it.elementPicture, defaultImage = DEFAULT_IMAGE).value
 
                     image?.let { img ->
                         Image(
                             bitmap = img.asImageBitmap(),
                             contentDescription = "Element picture.",
                             modifier = Modifier
-                                .fillMaxWidth(0.6f)
-                                .padding(top = 16.dp)
+                                .size(200.dp)
+                                .padding(top = 16.dp, bottom = 8.dp)
                         )
                     }
 
@@ -252,9 +266,11 @@ class DrawerFragment : Fragment() {
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = "Sorteados:",
+                    text = stringResource(id = R.string.drawn),
                     color = MaterialTheme.colors.secondaryVariant
                 )
+
+                ElementsDrawnLazyRow()
             }
         }
     }
@@ -266,7 +282,7 @@ class DrawerFragment : Fragment() {
                 onClick = { viewModel.drawNextElement() },
                 Modifier.fillMaxWidth(0.5f)
             ) {
-                Text(text = "PRÓXIMO")
+                Text(text = stringResource(id = R.string.next_element_button).uppercase())
             }
 
             Button(
@@ -274,7 +290,7 @@ class DrawerFragment : Fragment() {
                 colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondaryVariant),
                 modifier = Modifier.fillMaxWidth(0.5f)
             ) {
-                Text(text = "ENCERRAR SORTEIO")
+                Text(text = stringResource(id = R.string.finish_draw_button).uppercase())
             }
         }
     }
@@ -282,320 +298,91 @@ class DrawerFragment : Fragment() {
     @Composable
     fun DrawingDone() {
         Text(
-            text = "Todas as pedras já foram sorteadas! Bingo encerrado."
+            text = stringResource(id = R.string.all_elements_were_drawn),
+            textAlign = TextAlign.Center
         )
 
         Button(
-            onClick = { /*TODO*/ },
+            onClick = { viewModel.resetDraw() },
             Modifier
                 .fillMaxWidth(0.5f)
                 .padding(top = 12.dp)
         ) {
-            Text(text = "NOVO SORTEIO")
+            Text(text = stringResource(id = R.string.new_draw_button).uppercase())
         }
     }
 
-//    //    Função responsável pela criação do menu suspenso
-//    @Composable
-//    private fun DropdownMenu(drawingState: DrawingState, themes: List<Theme>) {
-//
-//        var expanded by remember { mutableStateOf(false) }
-//        val options = themes
-//
-//        ExposedDropdownMenuBox(
-//            expanded = expanded,
-//            onExpandedChange = { expanded = !expanded }
-//        ) {
-//            TextField(
-//                readOnly = true,
-//                value = viewModel.currentTheme.value?.theme_name ?: themes[0].theme_name,
-//                onValueChange = { },
-//                label = { Text(text = "Tema do Bingo") },
-//                trailingIcon = {
-//                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
-//                },
-//                colors = ExposedDropdownMenuDefaults.textFieldColors(backgroundColor = grid_background),
-//                modifier = Modifier.fillMaxWidth(),
-//                enabled = (drawingState == DrawingState.NotStarted)
-//            )
-//
-//            if (drawingState == DrawingState.NotStarted) {
-//                ExposedDropdownMenu(
-//                    expanded = expanded,
-//                    onDismissRequest = { expanded = false }
-//                ) {
-//                    options.forEach { selectionOption ->
-//                        DropdownMenuItem(
-//                            onClick = {
-//                                expanded = false
-//                                viewModel.changeTheme(selectionOption)
-//                            }
-//                        ) { Text(text = selectionOption.theme_name) }
-//                    }
-//                }
-//            }
-//        }
-//    }
+    /*
+    This function is responsible for composing the lazy row that shows all the
+    already drawn elements of the session
+     */
+    @Composable
+    private fun ElementsDrawnLazyRow() {
+        val elements = viewModel.getDrawnElements().reversed()
 
-    //    Função responsável pela criação do sorteador, a depender do estado do sorteio
-//    @Composable
-//    private fun Drawer(drawingState: DrawingState) {
-//
-//        Column(
-//            verticalArrangement = Arrangement.Center,
-//            horizontalAlignment = Alignment.CenterHorizontally,
-//            modifier = Modifier
-//                .padding(horizontal = 8.dp)
-//        ) {
-//            when (drawingState) {
-//                is DrawingState.NotStarted -> {
-//                    StateNotStarted()
-//                }
-//                is DrawingState.NextElement -> {
-//                    StateNextElement(drawingState)
-//                }
-//                else -> {
-//                    StateFinished()
-//                }
-//            }
-//        }
-//    }
-//
-//    //    Função responsável pela criação da lazyrow que informa os elementos já sorteados
-//    @Composable
-//    private fun ElementsDrawnLazyRow() {
-//        val elements = viewModel.elements.value?.filter { it.element_theme == viewModel.currentTheme.value?.theme_id }
-//
-//        Column(
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .wrapContentSize()
-//                .padding(8.dp),
-//            horizontalAlignment = Alignment.CenterHorizontally
-//        ) {
-//
-//            Text(
-//                text = "Elementos Sorteados:",
-//                textAlign = TextAlign.Center,
-//                modifier = Modifier.fillMaxWidth()
-//            )
-//
-//            LazyRow(
-//                Modifier
-//                    .fillMaxWidth(),
-//                horizontalArrangement = Arrangement.Center
-//            ) {
-//                itemsIndexed(items = elements!!) { _, element ->
-//                    Card(
-//                        shape = MaterialTheme.shapes.medium,
-//                        elevation = 8.dp,
-//                        backgroundColor =
-//                        if (element == elements[0]) MaterialTheme.colors.primaryVariant
-//                        else Color.Gray,
-//                        modifier = Modifier
-//                            .wrapContentSize()
-//                            .padding(4.dp),
-//                        onClick = { copyToClipboard(stringOfElementsDrawn(elements)) }
-//                    ) {
-//                        Text(
-//                            text = element.element_name.uppercase(),
-//                            fontWeight = FontWeight.SemiBold,
-//                            fontSize = 12.sp,
-//                            color = MaterialTheme.colors.onPrimary,
-//                            modifier = Modifier.padding(12.dp, 8.dp)
-//                        )
-//                    }
-//                }
-//            }
-//        }
-//    }
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentSize()
+                .padding(8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
 
-//    @Composable
-//    private fun StateNextElement(drawingState: DrawingState.NextElement) {
-//
-//        Column(
-//            verticalArrangement = Arrangement.SpaceEvenly,
-//            horizontalAlignment = Alignment.CenterHorizontally,
-//            modifier = Modifier
-//                .fillMaxWidth()
-//        ) {
-//            val captureController = rememberCaptureController()
-//
-//            Column(
-//                verticalArrangement = Arrangement.SpaceEvenly,
-//                horizontalAlignment = Alignment.CenterHorizontally,
-//                modifier = Modifier.fillMaxWidth()
-//            ) {
-//                Capturable(
-//                    controller = captureController,
-//                    onCaptured = { bitmap, error ->
-//                        if (bitmap != null) {
-//                            context?.let {
-//                                shareBitmap(
-//                                    bitmap,
-//                                    it,
-//                                    viewModel.drawElements.value!![0].element_name
-//                                )
-//                            }
-//                        }
-//
-//                        if (error != null) {
-//                            Log.d("CapturingError: ", "$error")
-//                        }
-//                    }) {
-//
-//                    Column(
-//                        verticalArrangement = Arrangement.SpaceEvenly,
-//                        horizontalAlignment = Alignment.CenterHorizontally,
-//                        modifier = Modifier
-//                            .wrapContentWidth()
-//                            .background(MaterialTheme.colors.background),
-//                    ) {
-//                        drawingState.nextElement.let {
-//
-//                            Text(
-//                                text = "${viewModel.drawElements.value?.size} / ${viewModel.themeElements.value?.size}",
-//                                textAlign = TextAlign.Center,
-//                                fontWeight = FontWeight.Bold,
-//                                color = MaterialTheme.colors.primary,
-//                                modifier = Modifier.wrapContentWidth()
-//                            )
-//
-//                            it.element_picture.let { url ->
-//                                val image =
-//                                    loadPicture(url = url, defaultImage = DEFAULT_IMAGE).value
-//                                image?.let { img ->
-//                                    Image(
-//                                        bitmap = img.asImageBitmap(),
-//                                        contentDescription = "Element image",
-//                                        Modifier
-//                                            .wrapContentWidth()
-//                                            .height(160.dp)
-//                                            .padding(top = 8.dp)
-//                                    )
-//                                }
-//                            }
-//
-//                            Text(
-//                                text = it.element_name.uppercase(),
-//                                textAlign = TextAlign.Center,
-//                                fontWeight = FontWeight.Bold,
-//                                modifier = Modifier
-//                                    .wrapContentWidth()
-//                                    .padding(top = 16.dp)
-//                            )
-//                        }
-//                    }
-//                }
-//            }
-//
-//
-//            Column(
-//                verticalArrangement = Arrangement.SpaceEvenly,
-//                horizontalAlignment = Alignment.CenterHorizontally,
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .padding(top = 40.dp)
-//            ) {
-//                Button(
-////                    onClick = { viewModel.drawNewElement() },
-//                    onClick = { TODO() },
-//                    modifier = Modifier.width(160.dp)
-//                ) {
-//                    Text(text = "PRÓXIMO")
-//                }
-//
-//                Button(
-////                    onClick = { viewModel.restartDrawing() },
-//                    onClick = { TODO() },
-//                    modifier = Modifier.width(160.dp),
-//                    colors = ButtonDefaults.buttonColors(
-//                        backgroundColor = MaterialTheme.colors.primaryVariant
-//                    )
-//                ) {
-//                    Text(
-//                        text = "RECOMEÇAR",
-//                        color = MaterialTheme.colors.onPrimary
-//                    )
-//                }
-//
-////                Botão responsável por compartilhar a cartela
-//                Button(
-//                    onClick = {
-//                        captureController.capture()
-//                    },
-//                    elevation = ButtonDefaults.elevation(4.dp),
-//                    colors = ButtonDefaults.buttonColors(backgroundColor = Color.Gray),
-//                    modifier = Modifier.width(160.dp)
-//                ) {
-//                    Text(
-//                        text = stringResource(id = R.string.compartilhar_cartela).uppercase(),
-//                        color = MaterialTheme.colors.onPrimary
-//                    )
-//                }
-//            }
-//        }
-//
-//    }
-//
-//    @Composable
-//    private fun StateFinished() {
-//        Text(
-//            text = "BINGO ENCERRADO!",
-//            textAlign = TextAlign.Center,
-//            style = MaterialTheme.typography.h4,
-//            fontStyle = FontStyle.Italic,
-//            fontWeight = FontWeight.Bold,
-//            color = MaterialTheme.colors.primaryVariant,
-//            modifier = Modifier
-//                .fillMaxWidth()
-//        )
-//
-//        Text(
-//            text = "Você já sorteou todas as pedras.",
-//            textAlign = TextAlign.Center,
-//            style = MaterialTheme.typography.subtitle1,
-//            modifier = Modifier
-//                .fillMaxWidth()
-//        )
-//
-//        Button(
-////            onClick = { viewModel.restartDrawing() },
-//            onClick = { TODO() },
-//            modifier = Modifier.padding(top = 40.dp),
-//        ) {
-//            Text(
-//                text = "NOVO SORTEIO",
-//                color = MaterialTheme.colors.onPrimary
-//            )
-//        }
-//    }
-//
-//    private fun stringOfElementsDrawn(elements: List<com.example.sorteadordebingo.data.Element>?): String {
-//        var string = "*${viewModel.currentTheme.value?.theme_name?.uppercase()} SORTEADOS(as):* \n\n"
-//
-//        if (elements != null) {
-//            for (element in elements) {
-//                string += element.element_name.plus("\n")
-//            }
-//        }
-//
-//        return string
-//    }
-//
-//    private fun copyToClipboard(string: String) {
-//        val clipboardManager =
-//            activity?.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-//        val clipData = ClipData.newPlainText("Elementos Sorteados", string)
-//        clipboardManager.setPrimaryClip(clipData)
-//
-//        view?.let {
-//            Snackbar.make(
-//                it,
-//                "Lista Copiada",
-//                Snackbar.LENGTH_SHORT
-//            ).show()
-//        }
-//    }
+            LazyRow(
+                Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                itemsIndexed(items = elements) { _, element ->
+                    Card(
+                        shape = MaterialTheme.shapes.medium,
+                        elevation = 8.dp,
+                        backgroundColor =
+                        if (element == elements[0]) MaterialTheme.colors.primaryVariant
+                        else Color.Gray,
+                        modifier = Modifier
+                            .wrapContentSize()
+                            .padding(4.dp),
+                        onClick = { copyToClipboard(stringOfElementsDrawn(elements)) }
+                    ) {
+                        Text(
+                            text = element.elementName.uppercase(),
+                            fontWeight = FontWeight.SemiBold,
+                            fontSize = 12.sp,
+                            color = MaterialTheme.colors.onPrimary,
+                            modifier = Modifier.padding(12.dp, 8.dp)
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    private fun stringOfElementsDrawn(elements: List<com.example.sorteadordebingo.data.Element>?): String {
+        var string = ("*${viewModel.getCurrentTheme().themeName} ${R.string.drawn_ptbr} \n\n").uppercase()
+
+        if (elements != null) {
+            for (element in elements) {
+                string += element.elementName.plus("\n")
+            }
+        }
+
+        return string
+    }
+
+    private fun copyToClipboard(string: String) {
+        val clipboardManager =
+            activity?.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clipData = ClipData.newPlainText("${R.string.drawn_elements}", string)
+        clipboardManager.setPrimaryClip(clipData)
+
+        view?.let {
+            Snackbar.make(
+                it,
+                "${R.string.list_copied}",
+                Snackbar.LENGTH_SHORT
+            ).show()
+        }
+    }
 
 }

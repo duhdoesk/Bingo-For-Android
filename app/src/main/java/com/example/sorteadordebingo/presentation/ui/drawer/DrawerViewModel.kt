@@ -72,7 +72,7 @@ class DrawerViewModel @Inject constructor(
                         session.drawnElements.split(",").onEach { it.trim() }
                             .filterNot { it.isEmpty() }
 
-                    elementsIds.forEach() { drawnElementId ->
+                    elementsIds.forEach { drawnElementId ->
                         themeElements.find { e -> e.elementId == drawnElementId.toInt() }
                             ?.let { drawnElement ->
                                 drawnElements.add(drawnElement)
@@ -195,7 +195,7 @@ class DrawerViewModel @Inject constructor(
     of elements of the theme and the amount that has already been drawn.
      */
     fun getAmountOfElements(): Int {
-        return themeElements.size
+        return availableElements.size + drawnElements.size
     }
 
     fun getAmountOfDrawnElements(): Int {

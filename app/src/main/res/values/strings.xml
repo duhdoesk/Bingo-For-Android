@@ -12,4 +12,15 @@
 <!--    TELA DO SORTEADOR   -->
     <string name="pick_theme">Escolha um tema para o bingo:</string>
     <string name="selected_theme">Tema do Bingo:</string>
+    <string name="please_wait">Aguarde enquanto carregamos o status do último sorteio</string>
+    <string name="change_theme">Mudar Tema</string>
+    <string name="drawn">Sorteados</string>
+    <string name="drawn_ptbr">Sorteados(as):</string>
+    <string name="drawn_elements">Elementos Sorteados:</string>
+    <string name="start_draw_button">Começar Sorteio</string>
+    <string name="finish_draw_button">Encerrar Sorteio</string>
+    <string name="new_draw_button">Novo Sorteio</string>
+    <string name="next_element_button">Próximo</string>
+    <string name="all_elements_were_drawn">Todas as pedras já foram sorteadas! Bingo encerrado.</string>
+    <string name="list_copied">Lista copiada</string>
 </resources>

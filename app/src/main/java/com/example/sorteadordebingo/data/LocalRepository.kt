@@ -21,15 +21,6 @@ class LocalRepository @Inject constructor(
     suspend fun getActiveSession(): Session? =
         sessionDao.getActiveSession()
 
-    suspend fun getSessionThemeId(sessionId: Long): Int =
-        sessionDao.getSessionThemeId(sessionId)
-
-    suspend fun setSessionThemeId(sessionId: Long, themeId: Int) =
-        sessionDao.setSessionThemeId(sessionId, themeId)
-
-    suspend fun getDrawnElementsIds(sessionId: Long): String =
-        sessionDao.getDrawnElementsIds(sessionId)
-
     suspend fun setDrawnElementsIds(sessionId: Long, idList: String) =
         sessionDao.setDrawnElementsIds(sessionId, idList)
 
@@ -39,20 +30,11 @@ class LocalRepository @Inject constructor(
     suspend fun getAllThemes(): List<Theme> =
         themeDao.getAllThemes()
 
-    suspend fun getTheme(themeId: Int): Theme =
-        themeDao.getTheme(themeId)
-
 
     /* ELEMENT FUNCTIONS */
 
-    suspend fun getAllElements(): List<Element> =
-        elementDao.getAllElements()
-
     suspend fun getThemeElements(themeId: Int): List<Element> =
         elementDao.getThemeElements(themeId)
-
-    suspend fun getElement(elementId: Int): Element =
-        elementDao.getElement(elementId)
 
 
     /* REPOSITORY INSTANCE */
