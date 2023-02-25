@@ -17,10 +17,11 @@
     <string name="drawn">Sorteados</string>
     <string name="drawn_ptbr">Sorteados(as):</string>
     <string name="drawn_elements">Elementos Sorteados:</string>
-    <string name="start_draw_button">Começar Sorteio</string>
-    <string name="finish_draw_button">Encerrar Sorteio</string>
+    <string name="start_draw_button">Começar</string>
+    <string name="finish_draw_button">Encerrar</string>
     <string name="new_draw_button">Novo Sorteio</string>
     <string name="next_element_button">Próximo</string>
     <string name="all_elements_were_drawn">Todas as pedras já foram sorteadas! Bingo encerrado.</string>
     <string name="list_copied">Lista copiada</string>
+    <string name="resume_draw">Retomando último sorteio</string>
 </resources>

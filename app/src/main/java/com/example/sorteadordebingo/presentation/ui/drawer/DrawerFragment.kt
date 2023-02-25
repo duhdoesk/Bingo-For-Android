@@ -189,7 +189,7 @@ class DrawerFragment : Fragment() {
                 onClick = { viewModel.resetDraw() },
                 colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondaryVariant),
                 modifier = Modifier
-                    .fillMaxWidth(0.5f)
+                    .width(200.dp)
             ) {
                 Text(text = stringResource(id = R.string.change_theme).uppercase())
             }
@@ -273,6 +273,14 @@ class DrawerFragment : Fragment() {
                 ElementsDrawnLazyRow()
             }
         }
+
+        if (viewModel.resume) {
+            view?.let {
+                snackMaker(it, resources.getString(R.string.resume_draw))
+            }
+
+            viewModel.resume = false
+        }
     }
 
     @Composable
@@ -280,7 +288,7 @@ class DrawerFragment : Fragment() {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Button(
                 onClick = { viewModel.drawNextElement() },
-                Modifier.fillMaxWidth(0.5f)
+                Modifier.width(200.dp)
             ) {
                 Text(text = stringResource(id = R.string.next_element_button).uppercase())
             }
@@ -288,7 +296,7 @@ class DrawerFragment : Fragment() {
             Button(
                 onClick = { viewModel.resetDraw() },
                 colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondaryVariant),
-                modifier = Modifier.fillMaxWidth(0.5f)
+                modifier = Modifier.width(200.dp)
             ) {
                 Text(text = stringResource(id = R.string.finish_draw_button).uppercase())
             }
@@ -305,7 +313,7 @@ class DrawerFragment : Fragment() {
         Button(
             onClick = { viewModel.resetDraw() },
             Modifier
-                .fillMaxWidth(0.5f)
+                .width(200.dp)
                 .padding(top = 12.dp)
         ) {
             Text(text = stringResource(id = R.string.new_draw_button).uppercase())
@@ -359,7 +367,7 @@ class DrawerFragment : Fragment() {
     }
 
     private fun stringOfElementsDrawn(elements: List<com.example.sorteadordebingo.data.Element>?): String {
-        var string = ("*${viewModel.getCurrentTheme().themeName} ${R.string.drawn_ptbr} \n\n").uppercase()
+        var string = ("*${viewModel.getCurrentTheme().themeName} ${resources.getString(R.string.drawn_ptbr)} \n\n").uppercase()
 
         if (elements != null) {
             for (element in elements) {
@@ -377,12 +385,16 @@ class DrawerFragment : Fragment() {
         clipboardManager.setPrimaryClip(clipData)
 
         view?.let {
-            Snackbar.make(
-                it,
-                "${R.string.list_copied}",
-                Snackbar.LENGTH_SHORT
-            ).show()
+            snackMaker(it, resources.getString(R.string.list_copied))
         }
+    }
+
+    private fun snackMaker(view: View, text: String) {
+        Snackbar.make(
+            view,
+            text,
+            Snackbar.LENGTH_SHORT
+        ).show()
     }
 
 }

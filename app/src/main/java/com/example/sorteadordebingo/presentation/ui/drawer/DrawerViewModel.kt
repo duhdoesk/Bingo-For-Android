@@ -6,6 +6,7 @@ import com.example.sorteadordebingo.data.Element
 import com.example.sorteadordebingo.data.LocalRepository
 import com.example.sorteadordebingo.data.Session
 import com.example.sorteadordebingo.data.Theme
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -32,6 +33,7 @@ class DrawerViewModel @Inject constructor(
 
     /* SESSION VARIABLES */
     private var session: Session? = null
+    var resume: Boolean = false
 
 
     /* THEME VARIABLES */
@@ -83,6 +85,7 @@ class DrawerViewModel @Inject constructor(
                         themeElements.filter { it.elementId.toString() !in elementsIds }
                             .toMutableList()
 
+                    resume = true
                     drawState.value = DrawState.Drawing(drawnElements.last())
                 }
             }
@@ -178,7 +181,9 @@ class DrawerViewModel @Inject constructor(
         drawState.value = DrawState.NotStarted
 
         viewModelScope.launch(Dispatchers.IO) {
-            localRepository.finishSession(session!!.sessionId)
+            if (session?.isCompleted == false) {
+                localRepository.finishSession(session!!.sessionId)
+            }
         }
     }
 
