@@ -179,7 +179,7 @@ class DrawerFragment : Fragment() {
             Button(
                 onClick = { viewModel.startDraw(theme) },
                 Modifier
-                    .fillMaxWidth(0.5f)
+                    .width(200.dp)
                     .padding(top = 64.dp)
             ) {
                 Text(text = stringResource(id = R.string.start_draw_button).uppercase())
@@ -367,7 +367,7 @@ class DrawerFragment : Fragment() {
     }
 
     private fun stringOfElementsDrawn(elements: List<com.example.sorteadordebingo.data.Element>?): String {
-        var string = ("*${viewModel.getCurrentTheme().themeName} ${resources.getString(R.string.drawn_ptbr)} \n\n").uppercase()
+        var string = ("*${viewModel.getCurrentTheme().themeName} ${resources.getString(R.string.drawn_ptbr)}* \n\n").uppercase()
 
         if (elements != null) {
             for (element in elements) {
