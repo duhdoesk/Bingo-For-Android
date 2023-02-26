@@ -24,4 +24,10 @@
     <string name="all_elements_were_drawn">Todas as pedras já foram sorteadas! Bingo encerrado.</string>
     <string name="list_copied">Lista copiada</string>
     <string name="resume_draw">Retomando último sorteio</string>
+
+    <!--    ALERTA DE REINÍCIO   -->
+    <string name="alert_title">Encerrar</string>
+    <string name="alert_body">Tem certeza que deseja encerrar o sorteio atual?</string>
+    <string name="alert_cancel">Não</string>
+    <string name="alert_confirm">Sim</string>
 </resources>

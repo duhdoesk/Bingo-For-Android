@@ -2,9 +2,11 @@
 
 package com.example.sorteadordebingo.presentation.ui.drawer
 
+import android.app.AlertDialog
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -34,16 +36,17 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.sorteadordebingo.R
-import com.example.sorteadordebingo.model.Theme
 import com.example.sorteadordebingo.model.Element
-import com.example.sorteadordebingo.presentation.ui.component.ThemeLazyColumnCard
+import com.example.sorteadordebingo.model.Theme
 import com.example.sorteadordebingo.presentation.theme.AppTheme
+import com.example.sorteadordebingo.presentation.ui.component.ThemeLazyColumnCard
 import com.example.sorteadordebingo.util.DEFAULT_IMAGE
 import com.example.sorteadordebingo.util.loadPicture
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
+
 
 @AndroidEntryPoint
 class DrawerFragment : Fragment() {
@@ -295,7 +298,7 @@ class DrawerFragment : Fragment() {
             }
 
             Button(
-                onClick = { viewModel.resetDraw() },
+                onClick = { resetConfirmation() },
                 colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondaryVariant),
                 modifier = Modifier.width(200.dp)
             ) {
@@ -396,6 +399,23 @@ class DrawerFragment : Fragment() {
             text,
             Snackbar.LENGTH_SHORT
         ).show()
+    }
+
+    private fun resetConfirmation() {
+        val builder: AlertDialog.Builder = AlertDialog.Builder(context)
+        builder.setCancelable(true)
+        builder.setTitle(resources.getString(R.string.alert_title))
+        builder.setMessage(resources.getString(R.string.alert_body))
+        builder.setPositiveButton(resources.getString(R.string.alert_confirm),
+            DialogInterface.OnClickListener { dialog, _ ->
+                viewModel.resetDraw()
+                dialog.dismiss()
+            })
+        builder.setNegativeButton(resources.getString(R.string.alert_cancel),
+            DialogInterface.OnClickListener { dialog, _ -> dialog.cancel()})
+
+        val dialog: AlertDialog = builder.create()
+        dialog.show()
     }
 
 }
