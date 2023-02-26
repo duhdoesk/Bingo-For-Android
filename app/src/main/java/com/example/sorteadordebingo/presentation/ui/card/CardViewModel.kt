@@ -1,42 +1,79 @@
 package com.example.sorteadordebingo.presentation.ui.card
 
-import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
-import com.example.sorteadordebingo.data.ThemeLocalDataSource
-import com.example.sorteadordebingo.model.Element
-import com.example.sorteadordebingo.model.Theme
+import androidx.lifecycle.viewModelScope
+import com.example.sorteadordebingo.data.Element
+import com.example.sorteadordebingo.data.LocalRepository
+import com.example.sorteadordebingo.data.Theme
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.random.Random
+
+sealed class CardState() {
+    object Loading: CardState()
+    data class DrawnCard(
+        val theme: Theme,
+        val card: List<Element>
+        ): CardState()
+}
 
 @HiltViewModel
-class BingoViewModel @Inject constructor(private val themeLocalDataSource: ThemeLocalDataSource) : ViewModel() {
+class CardViewModel @Inject constructor(private val localRepository: LocalRepository) : ViewModel() {
 
-    val themeList = mutableStateOf(themeList())
-    var currentTheme = mutableStateOf(themeList.value[0])
-    val elementList = mutableStateOf(currentTheme.value.elements)
+    /* STATE VARIABLES */
+    private var cardState = MutableStateFlow<CardState>(CardState.Loading)
+    val state = cardState.asStateFlow()
 
-    fun dealNewList() {
-        val drawIndexes = drawIndexes(currentTheme.value.elements.size)
-        val newList = mutableListOf<Element>()
+    /* THEME VARIABLES */
+    private var themes: List<Theme> = emptyList()
+    private lateinit var currentTheme: Theme
 
-        for (element in drawIndexes) {
-            newList.add(currentTheme.value.elements[element])
+    /* ELEMENT VARIABLES */
+    private var themeElements = mutableListOf<Element>()
+    private var cardElements = mutableListOf<Element>()
+//    private var cardElements = mutableListOf<Element>()
+
+    init {
+        loadData()
+    }
+
+    /*
+    This function is responsible for populating our theme and elements variables by the
+    call of the init method
+     */
+    private fun loadData() {
+        viewModelScope.launch(Dispatchers.IO) {
+            themes = localRepository.getAllThemes()
+            currentTheme = themes[0]
+            themeElements = localRepository.getThemeElements(currentTheme.themeId).toMutableList()
+            shuffleCard()
+            cardState.value = CardState.DrawnCard(currentTheme, cardElements)
         }
-
-        elementList.value = newList
     }
 
-    private fun drawIndexes(size: Int): List<Int> {
-        return generateSequence { Random.nextInt(0, size) }
-            .distinct()
-            .take(9)
-            .toSet()
-            .toList()
+
+    /*
+    The functions below are set to be called by the user depending on the actions
+    he takes on the view
+     */
+
+    fun getThemes() : List<Theme> {
+        return themes
     }
 
-    private fun themeList() : List<Theme> {
-        return themeLocalDataSource.loadThemes()
+    fun setCurrentTheme(theme: Theme) {
+        viewModelScope.launch(Dispatchers.IO) {
+            currentTheme = theme
+            themeElements = localRepository.getThemeElements(currentTheme.themeId).toMutableList()
+            shuffleCard()
+        }
     }
 
+    fun shuffleCard() {
+        cardElements = themeElements.shuffled().subList(0, 9).toMutableList()
+        cardState.value = CardState.DrawnCard(currentTheme, cardElements)
+    }
 }
