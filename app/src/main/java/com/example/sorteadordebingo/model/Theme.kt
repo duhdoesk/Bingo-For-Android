@@ -1,10 +1,12 @@
 package com.example.sorteadordebingo.model
 
-import kotlinx.serialization.Serializable
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
-@Serializable
+@Entity(tableName = "Theme")
 data class Theme(
-    val id: String,
-    val name: String,
-    val elements: List<Element>
+    @PrimaryKey(autoGenerate = false) @ColumnInfo(name = "theme_id") val themeId: Int,
+    @ColumnInfo(name = "theme_name") val themeName: String = "",
+    @ColumnInfo(name = "theme_picture") val themePicture: String = ""
 )

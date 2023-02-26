@@ -34,7 +34,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.sorteadordebingo.R
-import com.example.sorteadordebingo.data.Theme
+import com.example.sorteadordebingo.model.Theme
+import com.example.sorteadordebingo.model.Element
 import com.example.sorteadordebingo.presentation.ui.component.ThemeLazyColumnCard
 import com.example.sorteadordebingo.presentation.theme.AppTheme
 import com.example.sorteadordebingo.util.DEFAULT_IMAGE
@@ -366,7 +367,7 @@ class DrawerFragment : Fragment() {
         }
     }
 
-    private fun stringOfElementsDrawn(elements: List<com.example.sorteadordebingo.data.Element>?): String {
+    private fun stringOfElementsDrawn(elements: List<Element>?): String {
         var string = ("*${viewModel.getCurrentTheme().themeName} ${resources.getString(R.string.drawn_ptbr)}* \n\n").uppercase()
 
         if (elements != null) {

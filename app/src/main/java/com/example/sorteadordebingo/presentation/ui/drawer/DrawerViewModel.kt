@@ -2,11 +2,10 @@ package com.example.sorteadordebingo.presentation.ui.drawer
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.sorteadordebingo.data.Element
-import com.example.sorteadordebingo.data.LocalRepository
-import com.example.sorteadordebingo.data.Session
-import com.example.sorteadordebingo.data.Theme
-import com.google.android.material.snackbar.Snackbar
+import com.example.sorteadordebingo.model.Element
+import com.example.sorteadordebingo.data.local.LocalRepository
+import com.example.sorteadordebingo.model.Session
+import com.example.sorteadordebingo.model.Theme
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -86,7 +85,12 @@ class DrawerViewModel @Inject constructor(
                             .toMutableList()
 
                     resume = true
-                    drawState.value = DrawState.Drawing(drawnElements.last())
+
+                    if (availableElements.isEmpty()) {
+                        drawState.value = DrawState.Finished(drawnElements.last())
+                    } else {
+                        drawState.value = DrawState.Drawing(drawnElements.last())
+                    }
                 }
             }
         }

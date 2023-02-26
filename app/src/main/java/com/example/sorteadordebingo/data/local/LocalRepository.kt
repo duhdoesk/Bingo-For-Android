@@ -1,5 +1,11 @@
-package com.example.sorteadordebingo.data
+package com.example.sorteadordebingo.data.local
 
+import com.example.sorteadordebingo.data.ElementDao
+import com.example.sorteadordebingo.data.SessionDao
+import com.example.sorteadordebingo.data.ThemeDao
+import com.example.sorteadordebingo.model.Element
+import com.example.sorteadordebingo.model.Session
+import com.example.sorteadordebingo.model.Theme
 import javax.inject.Inject
 import javax.inject.Singleton
 

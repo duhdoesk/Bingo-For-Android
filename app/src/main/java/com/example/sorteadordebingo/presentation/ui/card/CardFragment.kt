@@ -223,7 +223,7 @@ class CardFragment : Fragment() {
                         Column(
                             modifier = Modifier
                                 .padding(1.dp)
-                                .width(80.dp)
+                                .width(100.dp)
                                 .height(100.dp)
                                 .background(grid_background),
                             horizontalAlignment = Alignment.CenterHorizontally,

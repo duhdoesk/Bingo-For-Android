@@ -1,4 +1,4 @@
-package com.example.sorteadordebingo.data
+package com.example.sorteadordebingo.model
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

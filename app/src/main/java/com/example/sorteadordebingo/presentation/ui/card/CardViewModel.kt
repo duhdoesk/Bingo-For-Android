@@ -2,9 +2,9 @@ package com.example.sorteadordebingo.presentation.ui.card
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.sorteadordebingo.data.Element
-import com.example.sorteadordebingo.data.LocalRepository
-import com.example.sorteadordebingo.data.Theme
+import com.example.sorteadordebingo.model.Element
+import com.example.sorteadordebingo.data.local.LocalRepository
+import com.example.sorteadordebingo.model.Theme
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

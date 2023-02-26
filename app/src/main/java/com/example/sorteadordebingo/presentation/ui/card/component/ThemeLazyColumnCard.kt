@@ -13,7 +13,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.example.sorteadordebingo.R
-import com.example.sorteadordebingo.data.Theme
+import com.example.sorteadordebingo.model.Theme
 import com.example.sorteadordebingo.util.loadPicture
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
